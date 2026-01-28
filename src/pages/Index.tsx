@@ -416,7 +416,33 @@ export default function Index() {
     // Fetch data from Supabase
     fetchData();
     
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Refetch on window focus (when returning from admin panel)
+    const handleFocus = () => fetchData();
+    window.addEventListener("focus", handleFocus);
+    
+    // Set up real-time subscriptions
+    const projectsChannel = supabase
+      .channel('projects-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => fetchData())
+      .subscribe();
+    
+    const skillsChannel = supabase
+      .channel('skills-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'skills' }, () => fetchData())
+      .subscribe();
+    
+    const certsChannel = supabase
+      .channel('certifications-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'certifications' }, () => fetchData())
+      .subscribe();
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("focus", handleFocus);
+      supabase.removeChannel(projectsChannel);
+      supabase.removeChannel(skillsChannel);
+      supabase.removeChannel(certsChannel);
+    };
   }, []);
 
   async function fetchData() {

@@ -144,8 +144,22 @@ export default function Projects() {
         window.addEventListener("scroll", handleScroll);
 
         fetchProjects();
+        
+        // Refetch on window focus
+        const handleFocus = () => fetchProjects();
+        window.addEventListener("focus", handleFocus);
+        
+        // Real-time subscription
+        const projectsChannel = supabase
+            .channel('projects-page-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => fetchProjects())
+            .subscribe();
 
-        return () => window.removeEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("focus", handleFocus);
+            supabase.removeChannel(projectsChannel);
+        };
     }, []);
 
     const fetchProjects = async () => {
