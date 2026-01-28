@@ -78,12 +78,16 @@ export default function ProjectManager() {
 
             if (id) {
                 // Update existing
-                const { error } = await supabase
+                const { data, error } = await supabase
                     .from('projects')
                     .update(projectData)
-                    .eq('id', id);
+                    .eq('id', id)
+                    .select();
                 
                 if (error) throw error;
+                
+                console.log("Admin Update Success:", data);
+                
                 toast.success("Project Updated", { description: `${selectedProject.title} has been saved` });
             } else {
                 // Insert new
@@ -94,12 +98,16 @@ export default function ProjectManager() {
                     .single();
                 
                 if (error) throw error;
+                
+                console.log("Admin Update Success:", data);
+                
                 if (data) setSelectedProject(data);
                 toast.success("Project Created", { description: `${selectedProject.title} has been added` });
             }
             
             fetchProjects();
         } catch (err: any) {
+            console.error("Project Save Error:", err);
             toast.error("Error", { description: err.message });
         }
         setLoading(false);
@@ -195,7 +203,7 @@ export default function ProjectManager() {
                     
                     {projects.map((project) => (
                         <button
-                            key={project.id}
+                            key={`project-${project.id}`}
                             onClick={() => setSelectedProject(project)}
                             className={`w-full p-4 flex items-center gap-3 border-b border-white/5 hover:bg-white/10 transition-colors text-left ${
                                 selectedProject?.id === project.id ? 'bg-white/10 border-l-4 border-l-purple-500' : ''

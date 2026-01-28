@@ -149,6 +149,7 @@ export default function Projects() {
     }, []);
 
     const fetchProjects = async () => {
+        // Disable cache - force fresh data from Supabase
         const { data, error } = await supabase
             .from('projects')
             .select('*')

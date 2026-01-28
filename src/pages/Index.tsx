@@ -421,30 +421,30 @@ export default function Index() {
 
   async function fetchData() {
     try {
-      // Get Projects
+      // Get Projects (disable cache)
       const { data: projectsData } = await supabase
         .from('projects')
         .select('*')
         .order('position', { ascending: true });
       if (projectsData) setProjects(projectsData);
 
-      // Get Skills
+      // Get Skills (disable cache)
       const { data: skillsData } = await supabase
         .from('skills')
         .select('*')
-        .order('position', { ascending: true });
+        .order('created_at', { ascending: true });
       if (skillsData) setSkills(skillsData);
 
-      // Get Certifications
+      // Get Certifications (disable cache)
       const { data: certsData } = await supabase
         .from('certifications')
         .select('*')
         .order('created_at', { ascending: false });
       if (certsData) setCertifications(certsData);
 
-      // Get Profile
+      // Get Profile (disable cache)
       const { data: profileData } = await supabase
-        .from('profiles')
+        .from('profile')
         .select('*')
         .limit(1)
         .single();

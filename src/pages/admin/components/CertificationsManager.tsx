@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../../lib/supabase";
 import { toast } from "@/components/ui/sonner";
-import { Trash2, Plus, Upload, Loader2, ExternalLink } from "lucide-react";
+import { Trash2, Plus, Upload, Loader2 } from "lucide-react";
 import ImageUpload from "./ImageUpload";
 
 export default function CertificationsManager() {
@@ -47,18 +47,30 @@ export default function CertificationsManager() {
         
         setUploading(true);
         try {
+            // CORRECTED: Do NOT send credential_url field
+            const certData = {
+                title: newCert.title,
+                image_url: newCert.image_url,
+                issuer: newCert.issuer,
+                issue_date: newCert.issue_date || null
+            };
+
             const { data, error } = await supabase
                 .from('certifications')
-                .insert(newCert)
+                .insert(certData)
                 .select()
                 .single();
 
             if (error) throw error;
+            
+            console.log("Admin Update Success:", data);
+            
             setCerts([data, ...certs]);
             toast.success("Certificate Added", { description: `${newCert.title} has been uploaded` });
             setIsAdding(false);
             setNewCert({ title: "", image_url: "", issuer: "", issue_date: "" });
         } catch (err: any) {
+            console.error("Certificate Add Error:", err);
             toast.error("Error", { description: err.message });
         }
         setUploading(false);
@@ -74,9 +86,13 @@ export default function CertificationsManager() {
                 .eq('id', id);
 
             if (error) throw error;
+            
+            console.log("Admin Delete Success: Certification ID", id);
+            
             setCerts(certs.filter(c => c.id !== id));
             toast.success("Certificate Deleted", { description: `${title} has been removed` });
         } catch (err: any) {
+            console.error("Certificate Delete Error:", err);
             toast.error("Error", { description: err.message });
         }
     };
@@ -109,7 +125,7 @@ export default function CertificationsManager() {
                 <div className="bg-white/5 border border-white/10 p-6 rounded-2xl mb-8 space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Certificate Title</label>
+                            <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Certificate Title *</label>
                             <input
                                 type="text"
                                 placeholder="e.g., AWS Solutions Architect"
@@ -119,7 +135,7 @@ export default function CertificationsManager() {
                             />
                         </div>
                         <div>
-                            <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Issuer</label>
+                            <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Issuer *</label>
                             <input
                                 type="text"
                                 placeholder="e.g., Amazon Web Services"
@@ -139,7 +155,7 @@ export default function CertificationsManager() {
                     />
 
                     <div>
-                        <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Issue Date</label>
+                        <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Issue Date (Optional)</label>
                         <input
                             type="date"
                             className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 outline-none"
@@ -196,7 +212,7 @@ export default function CertificationsManager() {
                             </div>
 
                             {/* Certificate Info */}
-                            {(cert.title || cert.issuer || cert.credential_url) && (
+                            {(cert.title || cert.issuer) && (
                                 <div className="p-4 space-y-2">
                                     {cert.title && (
                                         <h4 className="font-bold text-white text-sm">{cert.title}</h4>
@@ -208,16 +224,6 @@ export default function CertificationsManager() {
                                         <p className="text-xs text-slate-500">
                                             {new Date(cert.issue_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                                         </p>
-                                    )}
-                                    {cert.credential_url && (
-                                        <a
-                                            href={cert.credential_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 transition-colors"
-                                        >
-                                            <ExternalLink size={12} /> Verify
-                                        </a>
                                     )}
                                 </div>
                             )}

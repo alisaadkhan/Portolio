@@ -37,13 +37,18 @@ export default function ProfileManager() {
         setLoading(true);
         try {
             // Assuming we use ID 1 for the singleton profile
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('profiles')
-                .upsert({ id: 1, ...profile });
+                .upsert({ id: 1, ...profile })
+                .select();
 
             if (error) throw error;
+            
+            console.log("Admin Update Success:", data);
+            
             alert("Profile updated!");
         } catch (err: any) {
+            console.error("Profile Save Error:", err);
             alert("Error saving profile: " + err.message);
         }
         setLoading(false);
