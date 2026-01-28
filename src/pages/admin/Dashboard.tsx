@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
+import { toast } from "@/components/ui/sonner";
 import {
     FolderKanban, User, Award, LogOut, Save, Trash2, Plus, Loader2, Link as LinkIcon, Code2
 } from "lucide-react";
@@ -12,6 +13,7 @@ export default function AdminDashboard() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("profile");
     const [loading, setLoading] = useState(false);
+    const [authChecking, setAuthChecking] = useState(true);
 
     // DATA STATES
     const [profile, setProfile] = useState({
@@ -21,10 +23,21 @@ export default function AdminDashboard() {
         avatar_url: ""
     });
 
-    // INITIAL LOAD
+    // SECURITY: Check authentication on mount
     useEffect(() => {
-        fetchProfile();
+        checkAuth();
     }, []);
+
+    async function checkAuth() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            toast.error("Access Denied", { description: "Please login to continue" });
+            navigate("/admin/login");
+            return;
+        }
+        setAuthChecking(false);
+        fetchProfile();
+    }
 
     // --- FETCHING ---
     async function fetchProfile() {
@@ -60,10 +73,10 @@ export default function AdminDashboard() {
                 if (error) throw error;
             }
             
-            alert("✓ Profile Updated Successfully!");
+            toast.success("Profile Saved", { description: "Your changes have been saved successfully" });
             fetchProfile(); // Refresh the data
         } catch (error: any) {
-            alert("Error saving profile: " + error.message);
+            toast.error("Error", { description: error.message });
             console.error("Profile update error:", error);
         }
         setLoading(false);
@@ -105,6 +118,12 @@ export default function AdminDashboard() {
 
             {/* MAIN CONTENT */}
             <main className="flex-1 md:ml-64 p-8 md:p-12">
+                {authChecking ? (
+                    <div className="flex items-center justify-center h-[60vh]">
+                        <Loader2 className="animate-spin text-purple-500" size={40} />
+                    </div>
+                ) : (
+                <>
                 <header className="mb-12">
                     <h1 className="text-3xl font-bold text-white mb-2 capitalize">
                         {activeTab === 'profile' && 'Profile Settings'}
@@ -192,6 +211,8 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
+                </>
+                )}
             </main>
         </div>
     );

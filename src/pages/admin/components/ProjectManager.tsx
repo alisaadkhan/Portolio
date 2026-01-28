@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../../lib/supabase";
+import { toast } from "@/components/ui/sonner";
 import { Plus, Trash2, X, ExternalLink, Github, Save, Loader2 } from "lucide-react";
 import ImageUpload from "./ImageUpload";
 
@@ -67,7 +68,7 @@ export default function ProjectManager() {
 
     const handleSave = async () => {
         if (!selectedProject || !selectedProject.title.trim()) {
-            alert("Title is required");
+            toast.error("Missing Fields", { description: "Title is required" });
             return;
         }
 
@@ -83,7 +84,7 @@ export default function ProjectManager() {
                     .eq('id', id);
                 
                 if (error) throw error;
-                alert("✓ Project updated!");
+                toast.success("Project Updated", { description: `${selectedProject.title} has been saved` });
             } else {
                 // Insert new
                 const { data, error } = await supabase
@@ -94,12 +95,12 @@ export default function ProjectManager() {
                 
                 if (error) throw error;
                 if (data) setSelectedProject(data);
-                alert("✓ Project created!");
+                toast.success("Project Created", { description: `${selectedProject.title} has been added` });
             }
             
             fetchProjects();
         } catch (err: any) {
-            alert("Error saving: " + err.message);
+            toast.error("Error", { description: err.message });
         }
         setLoading(false);
     };
@@ -116,11 +117,11 @@ export default function ProjectManager() {
             
             if (error) throw error;
             
-            alert("✓ Project deleted!");
+            toast.success("Project Deleted", { description: `${selectedProject.title} has been removed` });
             setSelectedProject(null);
             fetchProjects();
         } catch (err: any) {
-            alert("Error deleting: " + err.message);
+            toast.error("Error", { description: err.message });
         }
     };
 

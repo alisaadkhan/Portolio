@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../../lib/supabase";
+import { toast } from "@/components/ui/sonner";
 import { Trash2, Plus, Upload, Loader2, ExternalLink } from "lucide-react";
 import ImageUpload from "./ImageUpload";
 
@@ -12,8 +13,7 @@ export default function CertificationsManager() {
         title: "",
         image_url: "",
         issuer: "",
-        issue_date: "",
-        credential_url: ""
+        issue_date: ""
     });
 
     useEffect(() => {
@@ -37,7 +37,11 @@ export default function CertificationsManager() {
 
     const handleAdd = async () => {
         if (!newCert.image_url) {
-            alert("Image URL is required!");
+            toast.error("Image Required", { description: "Please upload a certificate image" });
+            return;
+        }
+        if (!newCert.title || !newCert.issuer) {
+            toast.error("Missing Fields", { description: "Title and issuer are required" });
             return;
         }
         
@@ -51,16 +55,17 @@ export default function CertificationsManager() {
 
             if (error) throw error;
             setCerts([data, ...certs]);
+            toast.success("Certificate Added", { description: `${newCert.title} has been uploaded` });
             setIsAdding(false);
-            setNewCert({ title: "", image_url: "", issuer: "", issue_date: "", credential_url: "" });
+            setNewCert({ title: "", image_url: "", issuer: "", issue_date: "" });
         } catch (err: any) {
-            alert("Error adding certification: " + err.message);
+            toast.error("Error", { description: err.message });
         }
         setUploading(false);
     };
 
-    const handleDelete = async (id: number) => {
-        if (!confirm("Delete this certification? This cannot be undone.")) return;
+    const handleDelete = async (id: number, title: string) => {
+        if (!confirm(`Delete ${title || 'this certification'}? This cannot be undone.`)) return;
         
         try {
             const { error } = await supabase
@@ -70,8 +75,9 @@ export default function CertificationsManager() {
 
             if (error) throw error;
             setCerts(certs.filter(c => c.id !== id));
+            toast.success("Certificate Deleted", { description: `${title} has been removed` });
         } catch (err: any) {
-            alert("Error deleting certification: " + err.message);
+            toast.error("Error", { description: err.message });
         }
     };
 
@@ -132,26 +138,14 @@ export default function CertificationsManager() {
                         label="Certificate Image *"
                     />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Issue Date</label>
-                            <input
-                                type="date"
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 outline-none"
-                                value={newCert.issue_date}
-                                onChange={(e) => setNewCert({ ...newCert, issue_date: e.target.value })}
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Credential URL</label>
-                            <input
-                                type="text"
-                                placeholder="https://verify-certificate.com/..."
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 outline-none"
-                                value={newCert.credential_url}
-                                onChange={(e) => setNewCert({ ...newCert, credential_url: e.target.value })}
-                            />
-                        </div>
+                    <div>
+                        <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Issue Date</label>
+                        <input
+                            type="date"
+                            className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 outline-none"
+                            value={newCert.issue_date}
+                            onChange={(e) => setNewCert({ ...newCert, issue_date: e.target.value })}
+                        />
                     </div>
 
                     <div className="flex gap-3 pt-2">
@@ -183,7 +177,7 @@ export default function CertificationsManager() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {certs.map((cert) => (
-                        <div key={cert.id} className="group relative bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-purple-500/50 transition-all">
+                        <div key={`cert-${cert.id}`} className="group relative bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-purple-500/50 transition-all">
                             {/* Certificate Image */}
                             <div className="aspect-video relative bg-black">
                                 <img 
@@ -194,7 +188,7 @@ export default function CertificationsManager() {
                                 
                                 {/* Delete Button */}
                                 <button
-                                    onClick={() => handleDelete(cert.id)}
+                                    onClick={() => handleDelete(cert.id, cert.title)}
                                     className="absolute top-2 right-2 p-2 bg-red-500/90 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                                 >
                                     <Trash2 size={16} />
