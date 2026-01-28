@@ -1,0 +1,224 @@
+import {
+    ArrowUpRight, Github, Linkedin, Mail, ArrowRight, Download,
+    Terminal, Cpu, Database, Globe, Layers, Shield,
+    Menu, X, Send, Briefcase
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { supabase } from "../lib/supabase";
+
+// --- COMPONENTS ---
+const Typewriter = ({ text, delay }: { text: string, delay: number }) => {
+    const [displayText, setDisplayText] = useState("");
+    useEffect(() => {
+        let i = 0;
+        const timer = setTimeout(() => {
+            const interval = setInterval(() => {
+                setDisplayText(text.slice(0, i + 1));
+                i++;
+                if (i === text.length) clearInterval(interval);
+            }, 40);
+            return () => clearInterval(interval);
+        }, delay);
+        return () => clearTimeout(timer);
+    }, [text, delay]);
+    return <span>{displayText}<span className="animate-pulse text-purple-500">_</span></span>;
+};
+
+// Custom Icon for Upwork/Fiverr (Using Text as fallback or simple shapes if needed, but text is cleaner)
+const SocialPill = ({ href, label, icon }: any) => (
+    <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/5 rounded-full text-slate-400 text-sm hover:text-white hover:bg-white/10 hover:border-purple-500/50 transition-all"
+    >
+        {icon} <span>{label}</span>
+    </a>
+);
+
+export default function Home() {
+    const [profile, setProfile] = useState<any>(null);
+    const [certs, setCerts] = useState<any[]>([]);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 50);
+        window.addEventListener("scroll", handleScroll);
+
+        // Fetch Data
+        fetchData();
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    async function fetchData() {
+        // Get Profile
+        const { data: profileData } = await supabase.from('profile').select('*').single();
+        if (profileData) setProfile(profileData);
+
+        // Get Certs
+        const { data: certsData } = await supabase.from('certifications').select('*').order('created_at', { ascending: false });
+        if (certsData) setCerts(certsData);
+    }
+
+    const STACK = [
+        { name: "Python", icon: <Terminal size={18} /> },
+        { name: "Next.js", icon: <Globe size={18} /> },
+        { name: "Django", icon: <Database size={18} /> },
+        { name: "C++", icon: <Cpu size={18} /> },
+        { name: "Docker", icon: <Layers size={18} /> },
+        { name: "Security", icon: <Shield size={18} /> },
+    ];
+
+    return (
+        <div className="min-h-screen bg-black text-slate-300 font-sans selection:bg-purple-500/30 overflow-x-hidden">
+
+            {/* --- NAV --- */}
+            <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/70 backdrop-blur-xl border-b border-white/5' : 'bg-transparent py-6'}`}>
+                <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+                    <a href="#" className="text-xl font-bold text-white tracking-tighter">
+                        {profile?.display_name?.split(" ")[0] || "Ali"}<span className="text-purple-500">.</span>
+                    </a>
+
+                    <div className="hidden md:flex gap-8">
+                        {["Stack", "Work", "Certifications", "Contact"].map((item) => (
+                            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-slate-400 hover:text-white transition-colors">{item}</a>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <button className="md:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                            {isMobileMenuOpen ? <X /> : <Menu />}
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-48 pb-20">
+
+                {/* 1. HERO */}
+                <section className="mb-32">
+                    <div className="flex items-center gap-3 mb-8">
+                        <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                        </span>
+                        <span className="text-xs font-mono text-slate-400 tracking-widest uppercase">Available for work</span>
+                    </div>
+
+                    <h1 className="text-5xl md:text-8xl font-bold text-white tracking-tight mb-6 leading-[0.95]">
+                        {profile?.display_name || "Ali Saad Khan."}
+                    </h1>
+
+                    <div className="h-16 md:h-20 mb-8">
+                        <p className="text-xl md:text-3xl text-purple-400 font-medium">
+                            <Typewriter text={profile?.headline || "Full Stack Solutions Architect"} delay={500} />
+                        </p>
+                    </div>
+
+                    <p className="text-lg text-slate-400 max-w-2xl mb-10 leading-relaxed">
+                        {profile?.about_text || "Building secure backends and resilient systems."}
+                    </p>
+
+                    <div className="flex flex-wrap gap-4 mb-12">
+                        <SocialPill href="https://github.com/alisaadkhan" label="GitHub" icon={<Github size={16} />} />
+                        <SocialPill href="https://www.linkedin.com/in/ali-saad-khan-6a2a0b394" label="LinkedIn" icon={<Linkedin size={16} />} />
+                        <SocialPill href="https://www.upwork.com/freelancers/~0145ade69cd488f664?mp_source=share" label="Upwork" icon={<Briefcase size={16} />} />
+                        <SocialPill href="https://www.fiverr.com/s/P2AlEep" label="Fiverr" icon={<Globe size={16} />} />
+                    </div>
+
+                    <div className="flex flex-wrap gap-4">
+                        <a href="#contact" className="px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-slate-200 transition-colors flex items-center gap-2">
+                            Hire Me <ArrowRight size={18} />
+                        </a>
+                        <a href="/resume.pdf" download className="px-8 py-4 bg-white/5 border border-white/10 text-white font-medium rounded-full hover:bg-white/10 transition-colors flex items-center gap-2">
+                            <Download size={18} /> CV
+                        </a>
+                    </div>
+                </section>
+
+                {/* 2. STACK MARQUEE */}
+                <section id="stack" className="mb-40 overflow-hidden">
+                    <div className="flex items-center gap-4 mb-10">
+                        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Tech Arsenal</h2>
+                        <div className="h-px bg-white/10 flex-grow"></div>
+                    </div>
+                    <div className="relative flex overflow-x-hidden group mask-gradient">
+                        <div className="animate-marquee flex gap-4 whitespace-nowrap py-4">
+                            {[...STACK, ...STACK, ...STACK].map((tech, i) => (
+                                <div key={i} className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/5 rounded-full text-slate-300">
+                                    {tech.icon} <span className="font-semibold text-sm">{tech.name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 3. CERTIFICATIONS (New Section) */}
+                {certs.length > 0 && (
+                    <section id="certifications" className="mb-40">
+                        <div className="flex items-center gap-4 mb-10">
+                            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Certifications</h2>
+                            <div className="h-px bg-white/10 flex-grow"></div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {certs.map((cert) => (
+                                <div key={cert.id} className="group relative rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                                    {/* Hover Overlay */}
+                                    <div className="absolute inset-0 bg-purple-900/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
+                                    <img src={cert.image_url} alt="Certification" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* 4. CONTACT (Formspree) */}
+                <section id="contact" className="mb-20">
+                    <div className="bg-white/5 border border-white/5 p-8 md:p-12 rounded-[2.5rem]">
+                        <h2 className="text-3xl font-bold text-white mb-2">Let's build something.</h2>
+                        <p className="text-slate-400 mb-8">I'll get back to you automatically.</p>
+
+                        <form action="https://formspree.io/f/xjgwpoee" method="POST" className="space-y-4">
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <input type="text" name="name" placeholder="Name" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors" />
+                                <input type="email" name="email" placeholder="Email" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors" />
+                            </div>
+                            <textarea name="message" rows={4} placeholder="How can I help you?" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors resize-none"></textarea>
+
+                            <button type="submit" className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-slate-200 transition-colors flex justify-center items-center gap-2">
+                                <Send size={18} /> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <footer className="pt-8 border-t border-white/5 text-center text-slate-600 text-sm flex flex-col gap-2">
+                    <p>© 2026 Ali Saad Khan.</p>
+                    <div className="flex justify-center gap-6 text-xs">
+                        <a href="https://github.com/alisaadkhan" className="hover:text-purple-400 transition-colors">GitHub</a>
+                        <a href="https://www.linkedin.com/in/ali-saad-khan-6a2a0b394" className="hover:text-purple-400 transition-colors">LinkedIn</a>
+                        <a href="https://www.upwork.com/freelancers/~0145ade69cd488f664?mp_source=share" className="hover:text-purple-400 transition-colors">Upwork</a>
+                        <a href="https://www.fiverr.com/s/P2AlEep" className="hover:text-purple-400 transition-colors">Fiverr</a>
+                    </div>
+                </footer>
+
+            </div>
+
+            <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+        .mask-gradient {
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+      `}</style>
+        </div>
+    );
+}
