@@ -1,7 +1,7 @@
 import {
     ArrowUpRight, Github, Linkedin, Mail, ArrowRight, Download,
     Terminal, Cpu, Database, Globe, Layers, Shield,
-    Menu, X, Send, Briefcase
+    Menu, X, Send, Briefcase, Loader2
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -181,17 +181,7 @@ export default function Home() {
                         <h2 className="text-3xl font-bold text-white mb-2">Let's build something.</h2>
                         <p className="text-slate-400 mb-8">I'll get back to you automatically.</p>
 
-                        <form action="https://formspree.io/f/xjgwpoee" method="POST" className="space-y-4">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <input type="text" name="name" placeholder="Name" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors" />
-                                <input type="email" name="email" placeholder="Email" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors" />
-                            </div>
-                            <textarea name="message" rows={4} placeholder="How can I help you?" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors resize-none"></textarea>
-
-                            <button type="submit" className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-slate-200 transition-colors flex justify-center items-center gap-2">
-                                <Send size={18} /> Send Message
-                            </button>
-                        </form>
+                        <ContactForm />
                     </div>
                 </section>
 
@@ -220,5 +210,75 @@ export default function Home() {
         }
       `}</style>
         </div>
+    );
+}
+
+function ContactForm() {
+    const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setStatus("submitting");
+
+        const formData = new FormData(e.currentTarget);
+
+        try {
+            const response = await fetch("https://formspree.io/f/xjgwpoee", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                setStatus("success");
+                (e.target as HTMLFormElement).reset();
+            } else {
+                setStatus("error");
+            }
+        } catch (err) {
+            setStatus("error");
+        }
+    };
+
+    if (status === "success") {
+        return (
+            <div className="text-center py-12">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 text-green-400 mb-4">
+                    <Send size={32} />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3>
+                <p className="text-slate-400">I'll get back to you as soon as possible.</p>
+                <button
+                    onClick={() => setStatus("idle")}
+                    className="mt-6 text-purple-400 hover:text-purple-300 font-medium"
+                >
+                    Send another message
+                </button>
+            </div>
+        );
+    }
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+                <input type="text" name="name" placeholder="Name" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors" />
+                <input type="email" name="email" placeholder="Email" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors" />
+            </div>
+            <input type="text" name="subject" placeholder="Subject" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors" />
+            <textarea name="message" rows={4} placeholder="How can I help you?" required className="w-full bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none transition-colors resize-none"></textarea>
+
+            <button
+                type="submit"
+                disabled={status === "submitting"}
+                className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-slate-200 transition-colors flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+                {status === "submitting" ? <Loader2 className="animate-spin" /> : <><Send size={18} /> Send Message</>}
+            </button>
+            {status === "error" && (
+                <p className="text-red-400 text-center text-sm">Something went wrong. Please try again.</p>
+            )}
+        </form>
     );
 }
