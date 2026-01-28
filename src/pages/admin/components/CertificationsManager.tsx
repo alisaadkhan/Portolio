@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../../lib/supabase";
 import { Trash2, Plus, Upload, Loader2, ExternalLink } from "lucide-react";
+import ImageUpload from "./ImageUpload";
 
 export default function CertificationsManager() {
     const [certs, setCerts] = useState<any[]>([]);
@@ -123,17 +124,13 @@ export default function CertificationsManager() {
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider">Image URL *</label>
-                        <input
-                            type="text"
-                            placeholder="https://your-certificate-image.png"
-                            className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 outline-none"
-                            value={newCert.image_url}
-                            onChange={(e) => setNewCert({ ...newCert, image_url: e.target.value })}
-                        />
-                        <p className="text-xs text-slate-500 mt-1">Paste the URL of your certificate image</p>
-                    </div>
+                    {/* Image Upload Component */}
+                    <ImageUpload
+                        currentUrl={newCert.image_url}
+                        onUploadComplete={(url) => setNewCert({ ...newCert, image_url: url })}
+                        folder="certifications"
+                        label="Certificate Image *"
+                    />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

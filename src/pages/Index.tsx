@@ -128,37 +128,6 @@ const TECH_STACK = [
   }
 ];
 
-const PROJECTS = [
-  {
-    title: "Digital Signage System",
-    description: "Centralized CMS for real-time display updates with sub-200ms latency serving 50+ screens across 3 locations.",
-    tools: ["PHP 8", "MySQL", "WebSockets"],
-    year: "2024",
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=800&fit=crop&q=80",
-  },
-  {
-    title: "CPU Scheduling Simulator",
-    description: "Algorithmic engine for OS process management handling 10k+ concurrent queues with optimized memory allocation.",
-    tools: ["C++", "Algorithms", "Data Structures"],
-    year: "2024",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=800&fit=crop&q=80",
-  },
-  {
-    title: "Secure Authentication API",
-    description: "Enterprise-grade authentication system with JWT, OAuth 2.0, and rate limiting serving 100k+ daily requests.",
-    tools: ["Python", "FastAPI", "Redis"],
-    year: "2023",
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=800&fit=crop&q=80",
-  },
-  {
-    title: "E-commerce Backend",
-    description: "Scalable microservices architecture powering a multi-vendor marketplace with real-time inventory sync.",
-    tools: ["Django", "PostgreSQL", "Celery"],
-    year: "2023",
-    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&h=800&fit=crop&q=80",
-  }
-];
-
 const EXPERIENCE = [
   {
     role: "Lead Backend Engineer",
@@ -434,8 +403,11 @@ export default function Index() {
   const [scrolled, setScrolled] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<typeof CORE_COMPETENCIES[0] | typeof TECH_STACK[0] | null>(null);
   const [certifications, setCertifications] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [skills, setSkills] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
   const [hoveredIconIndex, setHoveredIconIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -448,18 +420,41 @@ export default function Index() {
   }, []);
 
   async function fetchData() {
-    // Get Certifications
-    const { data: certsData } = await supabase.from('certifications').select('*').order('created_at', { ascending: false });
-    if (certsData && certsData.length > 0) {
-      setCertifications(certsData);
-    } else {
-      // Use placeholder if no data
-      setCertifications(CERTIFICATIONS_PLACEHOLDER);
-    }
+    try {
+      // Get Projects
+      const { data: projectsData } = await supabase
+        .from('projects')
+        .select('*')
+        .order('position', { ascending: true });
+      if (projectsData) setProjects(projectsData);
 
-    // Get Profile
-    const { data: profileData } = await supabase.from('profile').select('*').single();
-    if (profileData) setProfile(profileData);
+      // Get Skills
+      const { data: skillsData } = await supabase
+        .from('skills')
+        .select('*')
+        .order('position', { ascending: true });
+      if (skillsData) setSkills(skillsData);
+
+      // Get Certifications
+      const { data: certsData } = await supabase
+        .from('certifications')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (certsData) setCertifications(certsData);
+
+      // Get Profile
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .limit(1)
+        .single();
+      if (profileData) setProfile(profileData);
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Prevent body scroll when modal is open
@@ -971,7 +966,7 @@ export default function Index() {
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {PROJECTS.map((project, index) => {
+              {projects.length > 0 ? projects.map((project, index) => {
                 const projectRef = useRef(null);
                 const { scrollYProgress } = useScroll({
                   target: projectRef,
@@ -981,7 +976,7 @@ export default function Index() {
                 
                 return (
                   <motion.div
-                    key={project.title}
+                    key={project.id || index}
                     ref={projectRef}
                     className="group relative bg-[#0F172A] border border-[#1E293B] rounded-2xl overflow-hidden"
                     variants={itemVariants}
@@ -993,63 +988,107 @@ export default function Index() {
                     style={{ willChange: "transform" }}
                   >
                     {/* Image with parallax + cinematic entrance */}
-                    <motion.div 
-                      className="aspect-video overflow-hidden"
-                      style={{ y }}
-                    >
-                      <motion.img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        width="800"
-                        height="450"
-                        className="w-full h-full object-cover"
-                        initial={{ scale: 1.1, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ 
-                          duration: 0.8,
-                          ease: [0.33, 1, 0.68, 1]
-                        }}
-                        style={{ willChange: "transform, opacity" }}
-                      />
-                    </motion.div>
+                    {project.image_url && (
+                      <motion.div 
+                        className="aspect-video overflow-hidden"
+                        style={{ y }}
+                      >
+                        <motion.img
+                          src={project.image_url}
+                          alt={project.title}
+                          loading="lazy"
+                          width="800"
+                          height="450"
+                          className="w-full h-full object-cover"
+                          initial={{ scale: 1.1, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          viewport={{ once: true, margin: "-100px" }}
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ 
+                            duration: 0.8,
+                            ease: [0.33, 1, 0.68, 1]
+                          }}
+                          style={{ willChange: "transform, opacity" }}
+                        />
+                      </motion.div>
+                    )}
 
                   {/* Content */}
                   <div className="p-8">
-                    {/* Metadata */}
-                    <div className="flex items-center gap-3 mb-4 text-xs text-[#94A3B8]">
-                      <span className="font-mono font-bold">{project.year}</span>
-                      <span>•</span>
-                      <div className="flex gap-2 flex-wrap">
-                        {project.tools.map((tool) => (
-                          <span key={tool} className="px-2 py-1 bg-[#020617] rounded-md font-medium">
-                            {tool}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
                     <h3 className="text-2xl font-black text-white mb-3 tracking-tight">
                       {project.title}
                     </h3>
-                    <p className="text-[#94A3B8] mb-6 leading-relaxed" style={{ lineHeight: 1.6 }}>
+                    <p className="text-[#94A3B8] mb-4 leading-relaxed" style={{ lineHeight: 1.6 }}>
                       {project.description}
                     </p>
 
+                    {/* Core Competencies (Text Pills) */}
+                    {project.competencies && project.competencies.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.competencies.map((skill: string, idx: number) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 border border-slate-700 text-slate-300 rounded-full text-xs"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Tech Stack (Icons) */}
+                    {project.tools && project.tools.length > 0 && (
+                      <div className="flex flex-wrap gap-3 mb-6">
+                        {project.tools.map((tool: string, idx: number) => (
+                          <img
+                            key={idx}
+                            src={`https://cdn.simpleicons.org/${tool}`}
+                            alt={tool}
+                            className="w-6 h-6 opacity-70 hover:opacity-100 transition-opacity"
+                            title={tool}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
                     {/* CTA with Arrow Slide */}
-                    <Link
-                      to="/projects"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E293B] border border-white/10 text-white font-bold rounded-xl hover:bg-white hover:text-black transition-all"
-                    >
-                      View Case Study
-                      <ArrowRight size={18} />
-                    </Link>
+                    {(project.live_link || project.github_link) && (
+                      <div className="flex gap-3">
+                        {project.live_link && (
+                          <a
+                            href={project.live_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E293B] border border-white/10 text-white font-bold rounded-xl hover:bg-white hover:text-black transition-all"
+                          >
+                            View Live
+                            <ArrowRight size={18} />
+                          </a>
+                        )}
+                        {project.github_link && (
+                          <a
+                            href={project.github_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E293B] border border-white/10 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-all"
+                          >
+                            <Github size={18} />
+                            Code
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               );
-              })}
+              }) : (
+                <div className="col-span-2 text-center py-20 text-slate-500">
+                  {loading ? <Loader2 className="animate-spin mx-auto" size={32} /> : 'No projects yet. Add some in the admin panel!'}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex justify-center mt-16">

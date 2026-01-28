@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import {
-    FolderKanban, User, Award, LogOut, Save, Trash2, Plus, Loader2, Link as LinkIcon
+    FolderKanban, User, Award, LogOut, Save, Trash2, Plus, Loader2, Link as LinkIcon, Code2
 } from "lucide-react";
 import CertificationsManager from "./components/CertificationsManager";
+import ProjectManager from "./components/ProjectManager";
+import SkillsManager from "./components/SkillsManager";
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
@@ -85,10 +87,15 @@ export default function AdminDashboard() {
                         <button onClick={() => setActiveTab("profile")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'profile' ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}>
                             <User size={18} /> Profile & Bio
                         </button>
+                        <button onClick={() => setActiveTab("projects")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'projects' ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}>
+                            <FolderKanban size={18} /> Projects
+                        </button>
+                        <button onClick={() => setActiveTab("skills")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'skills' ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}>
+                            <Code2 size={18} /> Skills & Dock
+                        </button>
                         <button onClick={() => setActiveTab("certs")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'certs' ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white'}`}>
                             <Award size={18} /> Certifications
                         </button>
-                        {/* Add Projects tab back if needed */}
                     </nav>
                 </div>
                 <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-500 hover:text-red-400">
@@ -99,7 +106,12 @@ export default function AdminDashboard() {
             {/* MAIN CONTENT */}
             <main className="flex-1 md:ml-64 p-8 md:p-12">
                 <header className="mb-12">
-                    <h1 className="text-3xl font-bold text-white mb-2 capitalize">{activeTab === 'certs' ? 'Certifications' : 'Profile Settings'}</h1>
+                    <h1 className="text-3xl font-bold text-white mb-2 capitalize">
+                        {activeTab === 'profile' && 'Profile Settings'}
+                        {activeTab === 'projects' && 'Projects Manager'}
+                        {activeTab === 'skills' && 'Skills & Dock'}
+                        {activeTab === 'certs' && 'Certifications'}
+                    </h1>
                     <p className="text-slate-500">System Control Panel /// v2.4.0</p>
                 </header>
 
@@ -154,7 +166,21 @@ export default function AdminDashboard() {
                                 className="mt-6 bg-white text-black font-bold py-3 px-8 rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2"
                             >
                                 {loading ? <Loader2 className="animate-spin" /> : <><Save size={18} /> Save Changes</>}
-                            </button>
+                        PROJECTS TAB --- */}
+                {activeTab === 'projects' && (
+                    <div className="max-w-6xl">
+                        <ProjectManager />
+                    </div>
+                )}
+
+                {/* --- SKILLS TAB --- */}
+                {activeTab === 'skills' && (
+                    <div className="max-w-6xl">
+                        <SkillsManager />
+                    </div>
+                )}
+
+                {/* ---     </button>
                         </div>
                     </div>
                 )}

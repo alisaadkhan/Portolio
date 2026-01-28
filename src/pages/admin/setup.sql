@@ -42,7 +42,8 @@ create table projects (
   description text,
   image_url text,
   year text,
-  tools text[], -- Array of strings
+  competencies text[], -- Core competencies (text pills)
+  tools text[], -- Tech stack (SimpleIcon slugs)
   live_link text,
   github_link text,
   is_featured boolean default false,
