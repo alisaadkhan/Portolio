@@ -1,9 +1,10 @@
 import {
     ArrowUpRight, Github, Linkedin, Mail, ArrowRight, Download,
     Terminal, Cpu, Database, Globe, Layers, Shield,
-    Menu, X, Send, Briefcase, Loader2
+    Menu, X, Send, Briefcase, Loader2, CheckCircle2
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "../lib/supabase";
 
@@ -77,7 +78,7 @@ export default function Home() {
 
             {/* --- NAV --- */}
             <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/70 backdrop-blur-xl border-b border-white/5' : 'bg-transparent py-6'}`}>
-                <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
                     <a href="#" className="text-xl font-bold text-white tracking-tighter">
                         {profile?.display_name?.split(" ")[0] || "Ali"}<span className="text-purple-500">.</span>
                     </a>
@@ -89,6 +90,9 @@ export default function Home() {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        <Link to="/#contact" className="hidden md:flex bg-white text-black text-sm font-bold px-5 py-2.5 rounded-full hover:bg-slate-200 transition-colors">
+                            Initialize Project
+                        </Link>
                         <button className="md:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                             {isMobileMenuOpen ? <X /> : <Menu />}
                         </button>
@@ -96,46 +100,73 @@ export default function Home() {
                 </div>
             </nav>
 
-            <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-48 pb-20">
+            <div className="max-w-7xl mx-auto px-6 pt-32 md:pt-40 pb-20">
 
-                {/* 1. HERO */}
-                <section className="mb-32">
-                    <div className="flex items-center gap-3 mb-8">
-                        <span className="relative flex h-2.5 w-2.5">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                        </span>
-                        <span className="text-xs font-mono text-slate-400 tracking-widest uppercase">Available for work</span>
-                    </div>
+                {/* 1. HERO REDESIGN */}
+                <section className="mb-32 grid md:grid-cols-2 gap-12 items-center">
+                    {/* LEFT SIDE */}
+                    <div>
+                        <div className="flex items-center gap-3 mb-8">
+                            <span className="relative flex h-2.5 w-2.5">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                            </span>
+                            <span className="text-xs font-mono text-slate-400 tracking-widest uppercase">Available for work</span>
+                        </div>
 
-                    <h1 className="text-5xl md:text-8xl font-bold text-white tracking-tight mb-6 leading-[0.95]">
-                        {profile?.display_name || "Ali Saad Khan."}
-                    </h1>
+                        <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-[0.95]">
+                            {profile?.display_name || "Solo product team"}
+                        </h1>
 
-                    <div className="h-16 md:h-20 mb-8">
-                        <p className="text-xl md:text-3xl text-purple-400 font-medium">
-                            <Typewriter text={profile?.headline || "Full Stack Solutions Architect"} delay={500} />
+                        <div className="h-16 md:h-auto mb-8">
+                            <p className="text-xl md:text-2xl text-purple-400 font-medium">
+                                <Typewriter text={profile?.headline || "Full Stack Solutions Architect"} delay={500} />
+                            </p>
+                        </div>
+
+                        <p className="text-lg text-slate-400 max-w-xl mb-10 leading-relaxed">
+                            {profile?.about_text || "Building secure backends and resilient systems. From low-level resource management to high-level web infrastructure."}
                         </p>
+
+                        <div className="flex flex-wrap gap-4 mb-12">
+                            <SocialPill href="https://github.com/alisaadkhan" label="GitHub" icon={<Github size={16} />} />
+                            <SocialPill href="https://www.linkedin.com/in/ali-saad-khan-6a2a0b394" label="LinkedIn" icon={<Linkedin size={16} />} />
+                            <SocialPill href="https://www.upwork.com/freelancers/~0145ade69cd488f664?mp_source=share" label="Upwork" icon={<Briefcase size={16} />} />
+                            <SocialPill href="https://www.fiverr.com/s/P2AlEep" label="Fiverr" icon={<Globe size={16} />} />
+                        </div>
+
+                        <div className="flex flex-wrap gap-4">
+                            <a href="#contact" className="px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-slate-200 transition-colors flex items-center gap-2">
+                                Initialize Project <ArrowRight size={18} />
+                            </a>
+                            <Link to="/projects" className="px-8 py-4 bg-white/5 border border-white/10 text-white font-medium rounded-full hover:bg-white/10 transition-colors flex items-center gap-2">
+                                View Case Studies
+                            </Link>
+                        </div>
                     </div>
 
-                    <p className="text-lg text-slate-400 max-w-2xl mb-10 leading-relaxed">
-                        {profile?.about_text || "Building secure backends and resilient systems."}
-                    </p>
+                    {/* RIGHT SIDE */}
+                    <div className="relative flex justify-center md:justify-end">
+                        {/* Circle Container */}
+                        <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-2 border-white/10 p-2">
+                            <div className="w-full h-full rounded-full overflow-hidden bg-white/5 relative">
+                                {profile?.avatar_url ? (
+                                    <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-slate-600 bg-black">
+                                        <span className="text-6xl">Ali</span>
+                                    </div>
+                                )}
+                            </div>
 
-                    <div className="flex flex-wrap gap-4 mb-12">
-                        <SocialPill href="https://github.com/alisaadkhan" label="GitHub" icon={<Github size={16} />} />
-                        <SocialPill href="https://www.linkedin.com/in/ali-saad-khan-6a2a0b394" label="LinkedIn" icon={<Linkedin size={16} />} />
-                        <SocialPill href="https://www.upwork.com/freelancers/~0145ade69cd488f664?mp_source=share" label="Upwork" icon={<Briefcase size={16} />} />
-                        <SocialPill href="https://www.fiverr.com/s/P2AlEep" label="Fiverr" icon={<Globe size={16} />} />
-                    </div>
-
-                    <div className="flex flex-wrap gap-4">
-                        <a href="#contact" className="px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-slate-200 transition-colors flex items-center gap-2">
-                            Hire Me <ArrowRight size={18} />
-                        </a>
-                        <a href="/resume.pdf" download className="px-8 py-4 bg-white/5 border border-white/10 text-white font-medium rounded-full hover:bg-white/10 transition-colors flex items-center gap-2">
-                            <Download size={18} /> CV
-                        </a>
+                            {/* Verified Badge */}
+                            <div className="absolute -top-4 -right-4 bg-black border border-white/10 px-4 py-2 rounded-full flex items-center gap-2 shadow-[0_0_30px_rgba(168,85,247,0.3)]">
+                                <div className="bg-purple-500 rounded-full p-1 text-white">
+                                    <CheckCircle2 size={12} />
+                                </div>
+                                <span className="text-xs font-bold text-white uppercase tracking-wider">Verified Expert</span>
+                            </div>
+                        </div>
                     </div>
                 </section>
 

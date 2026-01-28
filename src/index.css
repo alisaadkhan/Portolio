@@ -14,6 +14,36 @@
   }
 }
 
+/* Performance Optimization Classes */
+@layer utilities {
+  /* GPU Acceleration Hints */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  .will-change-transform-opacity {
+    will-change: transform, opacity;
+  }
+  
+  /* Hardware Acceleration */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Anti-aliasing for smooth text during animation */
+  .smooth-text {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
 /* Cyber Violet Design System */
 
 @layer base {

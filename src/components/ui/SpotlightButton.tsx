@@ -9,9 +9,11 @@ interface SpotlightButtonProps {
     onClick?: () => void;
     className?: string;
     width?: string;
+    target?: string;
+    rel?: string;
 }
 
-export default function SpotlightButton({ children, href, to, onClick, className = "", width = "fit-content" }: SpotlightButtonProps) {
+export default function SpotlightButton({ children, href, to, onClick, className = "", width = "fit-content", target, rel }: SpotlightButtonProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [opacity, setOpacity] = useState(0);
@@ -76,7 +78,7 @@ export default function SpotlightButton({ children, href, to, onClick, className
     }
 
     if (href) {
-        return <a href={href} className="inline-block selection:bg-none cursor-pointer" onClick={onClick}>{Content}</a>;
+        return <a href={href} target={target} rel={rel} className="inline-block selection:bg-none cursor-pointer" onClick={onClick}>{Content}</a>;
     }
 
     return <button onClick={onClick} className="inline-block selection:bg-none cursor-pointer">{Content}</button>;

@@ -4,6 +4,7 @@ import { supabase } from "../../lib/supabase";
 import {
     FolderKanban, User, Award, LogOut, Save, Trash2, Plus, Loader2, Link as LinkIcon
 } from "lucide-react";
+import CertificationsManager from "./components/CertificationsManager";
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
@@ -17,13 +18,10 @@ export default function AdminDashboard() {
         about_text: "",
         avatar_url: ""
     });
-    const [certs, setCerts] = useState<any[]>([]);
-    const [newCertUrl, setNewCertUrl] = useState("");
 
     // INITIAL LOAD
     useEffect(() => {
         fetchProfile();
-        fetchCerts();
     }, []);
 
     // --- FETCHING ---
@@ -32,35 +30,41 @@ export default function AdminDashboard() {
         if (data) setProfile(data);
     }
 
-    async function fetchCerts() {
-        const { data } = await supabase.from('certifications').select('*').order('created_at', { ascending: false });
-        if (data) setCerts(data);
-    }
-
     // --- ACTIONS ---
     async function handleUpdateProfile() {
         setLoading(true);
-        // Update the single profile row (ID 1 usually, or generic update)
-        const { error } = await supabase.from('profile').update(profile).gt('id', 0);
-        setLoading(false);
-        if (error) alert("Error saving profile: " + error.message);
-        else alert("Profile Updated!");
-    }
+        try {
+            // First, check if a profile exists
+            const { data: existingProfile } = await supabase
+                .from('profile')
+                .select('id')
+                .limit(1)
+                .single();
 
-    async function handleAddCert() {
-        if (!newCertUrl) return;
-        const { error } = await supabase.from('certifications').insert([{ image_url: newCertUrl }]);
-        if (error) {
-            alert("Error: " + error.message);
-        } else {
-            setNewCertUrl("");
-            fetchCerts();
+            if (existingProfile) {
+                // Update existing profile
+                const { error } = await supabase
+                    .from('profile')
+                    .update(profile)
+                    .eq('id', existingProfile.id);
+                
+                if (error) throw error;
+            } else {
+                // Insert new profile
+                const { error } = await supabase
+                    .from('profile')
+                    .insert([profile]);
+                
+                if (error) throw error;
+            }
+            
+            alert("✓ Profile Updated Successfully!");
+            fetchProfile(); // Refresh the data
+        } catch (error: any) {
+            alert("Error saving profile: " + error.message);
+            console.error("Profile update error:", error);
         }
-    }
-
-    async function handleDeleteCert(id: number) {
-        await supabase.from('certifications').delete().eq('id', id);
-        fetchCerts();
+        setLoading(false);
     }
 
     const handleLogout = async () => {
@@ -157,34 +161,8 @@ export default function AdminDashboard() {
 
                 {/* --- CERTIFICATIONS TAB --- */}
                 {activeTab === 'certs' && (
-                    <div className="max-w-4xl">
-                        {/* Add New */}
-                        <div className="bg-white/5 border border-white/5 p-6 rounded-2xl mb-8 flex gap-4">
-                            <input
-                                value={newCertUrl}
-                                onChange={(e) => setNewCertUrl(e.target.value)}
-                                placeholder="Paste Image URL here..."
-                                className="flex-1 bg-black border border-white/10 rounded-xl p-4 text-white focus:border-purple-500 focus:outline-none"
-                            />
-                            <button onClick={handleAddCert} className="bg-purple-600 text-white font-bold px-6 rounded-xl hover:bg-purple-700">
-                                <Plus />
-                            </button>
-                        </div>
-
-                        {/* List */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                            {certs.map((cert) => (
-                                <div key={cert.id} className="group relative aspect-video bg-black rounded-xl border border-white/10 overflow-hidden">
-                                    <img src={cert.image_url} alt="Cert" className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
-                                    <button
-                                        onClick={() => handleDeleteCert(cert.id)}
-                                        className="absolute top-2 right-2 p-2 bg-red-500/80 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="max-w-6xl">
+                        <CertificationsManager />
                     </div>
                 )}
 
