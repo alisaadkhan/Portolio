@@ -210,7 +210,6 @@ export default function AdminDashboard() {
                         <CertificationsManager />
                     </div>
                 )}
-
                 </>
                 )}
             </main>
