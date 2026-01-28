@@ -166,7 +166,12 @@ export default function AdminDashboard() {
                                 className="mt-6 bg-white text-black font-bold py-3 px-8 rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2"
                             >
                                 {loading ? <Loader2 className="animate-spin" /> : <><Save size={18} /> Save Changes</>}
-                        PROJECTS TAB --- */}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* --- PROJECTS TAB --- */}
                 {activeTab === 'projects' && (
                     <div className="max-w-6xl">
                         <ProjectManager />
@@ -177,11 +182,6 @@ export default function AdminDashboard() {
                 {activeTab === 'skills' && (
                     <div className="max-w-6xl">
                         <SkillsManager />
-                    </div>
-                )}
-
-                {/* ---     </button>
-                        </div>
                     </div>
                 )}
 
