@@ -37,8 +37,8 @@ export default function SwipeFillButton({
   const baseClasses = "relative flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-xl overflow-hidden group transition-all duration-300";
   
   const variantClasses = variant === "primary" 
-    ? "bg-white text-[#020617] shadow-2xl shadow-white/10"
-    : "bg-transparent border-2 border-white/20 text-white";
+    ? "bg-[#0F766E] text-white shadow-2xl shadow-teal-500/20 border-2 border-teal-500/30"
+    : "bg-transparent border-2 border-teal-500/40 text-teal-100";
 
   const content = (
     <>
@@ -46,8 +46,8 @@ export default function SwipeFillButton({
       <motion.div
         className={`absolute inset-0 z-0 ${
           variant === "primary" 
-            ? "bg-[#020617]" 
-            : "bg-white"
+            ? "bg-teal-400" 
+            : "bg-teal-500"
         }`}
         initial={{ x: "-100%" }}
         whileHover={{ x: 0 }}
@@ -62,8 +62,8 @@ export default function SwipeFillButton({
       {/* Text Content with Color Switch */}
       <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${
         variant === "primary"
-          ? "group-hover:text-white"
-          : "group-hover:text-[#020617]"
+          ? "group-hover:text-[#020617]"
+          : "group-hover:text-white"
       }`}>
         {children}
       </span>
@@ -82,8 +82,8 @@ export default function SwipeFillButton({
         whileHover={{ 
           scale: 1.02,
           boxShadow: variant === "primary" 
-            ? "0 0 0 2px rgba(255, 255, 255, 0.5)" 
-            : "0 0 0 2px rgba(255, 255, 255, 0.8)"
+            ? "0 0 0 2px rgba(45, 212, 191, 0.6)" 
+            : "0 0 0 2px rgba(20, 184, 166, 0.8)"
         }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}

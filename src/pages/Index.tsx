@@ -1625,21 +1625,32 @@ function ContactForm() {
         </motion.p>
       )}
 
-      <button
+      <motion.button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full bg-white text-[#020617] font-black py-5 rounded-xl hover:bg-slate-200 transition-colors flex justify-center items-center gap-3 text-lg disabled:opacity-70 disabled:cursor-not-allowed shadow-2xl"
+        className="relative w-full bg-[#0F766E] text-white font-black py-5 rounded-xl transition-all flex justify-center items-center gap-3 text-lg disabled:opacity-70 disabled:cursor-not-allowed shadow-2xl shadow-teal-500/20 border-2 border-teal-500/30 overflow-hidden group"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
       >
-        {status === "submitting" ? (
-          <>
-            <Loader2 className="animate-spin" size={24} /> Sending...
-          </>
-        ) : (
-          <>
-            <Send size={24} /> Send Message
-          </>
-        )}
-      </button>
+        {/* Slide Fill on Hover */}
+        <motion.div
+          className="absolute inset-0 bg-teal-400 z-0"
+          initial={{ x: "-100%" }}
+          whileHover={{ x: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        />
+        <span className="relative z-10 flex items-center gap-3 group-hover:text-[#020617] transition-colors">
+          {status === "submitting" ? (
+            <>
+              <Loader2 className="animate-spin" size={24} /> Sending...
+            </>
+          ) : (
+            <>
+              <Send size={24} /> Send Message
+            </>
+          )}
+        </span>
+      </motion.button>
     </form>
   );
 }
