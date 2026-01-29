@@ -5,7 +5,7 @@ import {
   Briefcase, Code, Award, BadgeCheck, HelpCircle, MessageCircle,
   ShieldCheck, Server, Lock, ChevronDown, Terminal, Database,
   Shield, Zap, Globe, GitBranch, FileCode, Cpu, Cloud, Workflow,
-  Boxes, Layers, PackageCheck, Rocket, Loader2
+  Boxes, Layers, PackageCheck, Rocket, Loader2, Target
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
