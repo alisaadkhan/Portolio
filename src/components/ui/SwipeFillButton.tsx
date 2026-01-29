@@ -38,104 +38,46 @@ export default function SwipeFillButton({
 }: SwipeFillButtonProps) {
   const buttonRef = useRef<HTMLAnchorElement | HTMLButtonElement>(null);
 
-  const baseClasses = "relative flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-xl overflow-hidden group transition-all duration-300";
-
-  const variantClasses = variant === "primary"
-    ? "bg-white text-black shadow-xl shadow-white/5 border border-white/20"
-    : "bg-transparent border border-white/30 text-white";
+  const baseClasses = "group relative overflow-hidden rounded-full border border-white bg-transparent px-8 py-3 text-white transition-all duration-300 hover:text-black font-bold";
 
   const content = (
     <>
-      {/* Slide Fill Background */}
-      <motion.div
-        className={`absolute inset-0 z-0 ${variant === "primary"
-          ? "bg-blue-600"
-          : "bg-white"
-          }`}
-        initial={{ x: "-100%" }}
-        whileHover={{ x: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 150,
-          damping: 20
-        }}
-      />
-
-      {/* Text Content with Color Switch */}
-      <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${variant === "primary"
-        ? "group-hover:text-white"
-        : "group-hover:text-black"
-        }`}>
+      <span className="absolute inset-0 -z-10 w-0 bg-white transition-all duration-300 ease-out group-hover:w-full"></span>
+      <span className="relative z-10 flex items-center gap-2">
         {children}
       </span>
     </>
   );
 
-  // External link (href)
   if (href) {
     return (
-      <motion.a
-        ref={buttonRef as React.RefObject<HTMLAnchorElement>}
+      <a
         href={href}
         target={target}
         rel={rel}
-        className={`${baseClasses} ${variantClasses} ${className}`}
-        whileHover={{
-          scale: 1.02,
-          boxShadow: variant === "primary"
-            ? "0 0 0 2px rgba(45, 212, 191, 0.6)"
-            : "0 0 0 2px rgba(20, 184, 166, 0.8)"
-        }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        style={{ willChange: "transform" }}
+        className={`${baseClasses} ${className}`}
       >
         {content}
-      </motion.a>
+      </a>
     );
   }
 
-  // Internal route (to)
   if (to) {
     return (
-      <Link to={to}>
-        <motion.div
-          className={`${baseClasses} ${variantClasses} ${className}`}
-          whileHover={{
-            scale: 1.02,
-            boxShadow: variant === "primary"
-              ? "0 0 0 2px rgba(255, 255, 255, 0.5)"
-              : "0 0 0 2px rgba(255, 255, 255, 0.8)"
-          }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          style={{ willChange: "transform" }}
-        >
-          {content}
-        </motion.div>
+      <Link to={to} className={`${baseClasses} ${className}`}>
+        {content}
       </Link>
     );
   }
 
-  // Button element
   return (
-    <motion.button
-      ref={buttonRef as React.RefObject<HTMLButtonElement>}
+    <button
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`${baseClasses} ${variantClasses} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-      whileHover={!disabled ? {
-        scale: 1.02,
-        boxShadow: variant === "primary"
-          ? "0 0 0 2px rgba(255, 255, 255, 0.5)"
-          : "0 0 0 2px rgba(255, 255, 255, 0.8)"
-      } : {}}
-      whileTap={!disabled ? { scale: 0.95 } : {}}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      style={{ willChange: "transform" }}
+      className={`${baseClasses} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       {content}
-    </motion.button>
+    </button>
   );
 }

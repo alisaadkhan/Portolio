@@ -513,24 +513,28 @@ export default function Index() {
             title: "JavaScript Essentials 1",
             image_url: "/assets/certifications/cisco-javascript.png",
             issuer: "Cisco Networking Academy",
-            issue_date: "2025-10-15",
-            credential_url: null
+            rotation: "rotate-2"
           },
           {
             id: 2,
             title: "Networking Essentials",
             image_url: "/assets/certifications/cisco-networking.png",
             issuer: "Cisco Networking Academy",
-            issue_date: "2025-05-24",
-            credential_url: null
+            rotation: "-rotate-3"
           },
           {
             id: 3,
-            title: "Meta Backend Developer",
-            image_url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop&q=80",
-            issuer: "Meta",
-            issue_date: "2023-09-10",
-            credential_url: null
+            title: "Web Development Internship",
+            image_url: "/assets/certifications/devspire-internship.png",
+            issuer: "DevSpire Solutions",
+            rotation: "rotate-1"
+          },
+          {
+            id: 4,
+            title: "WebCamp Participation",
+            image_url: "/assets/certifications/webcamp.png",
+            issuer: "Google Developer Student Clubs",
+            rotation: "-rotate-6"
           }
         ];
         setCertifications(fallbackCerts);
@@ -1235,54 +1239,51 @@ export default function Index() {
                 Professional Certifications
               </motion.h2>
 
-              {/* Horizontal Scrolling Gallery */}
-              <div className="relative">
-                <div className="flex flex-row overflow-x-auto gap-8 pb-12 scrollbar-hide snap-x snap-mandatory px-4 md:px-0">
-                  {(certifications && certifications.length > 0) ? certifications.map((cert, index) => (
-                    <motion.div
-                      key={cert.id || index}
-                      className="flex-none w-[300px] md:w-[400px] snap-center"
-                      variants={itemVariants}
-                      whileHover={{ y: -10 }}
-                      transition={springTransition}
-                    >
-                      <div className="group relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900 shadow-2xl transition-all duration-500 hover:border-blue-500/50">
-                        {/* Certificate Image */}
-                        <div className="relative w-full h-[70%] bg-slate-800 overflow-hidden">
-                          <img
-                            src={cert.image_url || cert.image}
-                            alt={cert.title || "Certification"}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60" />
-                        </div>
-
-                        {/* Content Area */}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 bg-slate-900/90 backdrop-blur-md border-t border-white/5">
-                          <h3 className="text-white font-bold text-lg md:text-xl leading-tight mb-2 group-hover:text-blue-400 transition-colors">
-                            {cert.title}
-                          </h3>
-                          <div className="flex items-center justify-between">
-                            <p className="text-slate-400 text-sm font-medium">{cert.issuer}</p>
-                            <BadgeCheck className="w-5 h-5 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </div>
-                        </div>
-
-                        {/* Subtle Glow Effect */}
-                        <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-colors duration-500 pointer-events-none" />
+              {/* "Messy Stack" Layout */}
+              <div className="flex flex-wrap justify-center gap-8 md:gap-12 relative">
+                {(certifications && certifications.length > 0) ? certifications.map((cert, index) => (
+                  <motion.div
+                    key={cert.id || index}
+                    className={`relative w-[300px] md:w-[380px] aspect-[4/3] group cursor-pointer ${cert.rotation || ''}`}
+                    variants={itemVariants}
+                    whileHover={{
+                      scale: 1.1,
+                      rotate: 0,
+                      zIndex: 50,
+                      transition: { type: "spring", stiffness: 300, damping: 20 }
+                    }}
+                    style={{ willChange: "transform" }}
+                  >
+                    <div className="relative h-full rounded-xl overflow-hidden border-8 border-white bg-white shadow-xl transition-all duration-300 group-hover:shadow-2xl">
+                      {/* Polaroid Image */}
+                      <div className="relative w-full h-[80%] bg-slate-100 overflow-hidden">
+                        <img
+                          src={cert.image_url || cert.image}
+                          alt={cert.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                    </motion.div>
-                  )) : (
-                    <div className="w-full text-center py-20 text-slate-500 border border-dashed border-white/10 rounded-2xl">
-                      <p>No certifications available yet.</p>
-                    </div>
-                  )}
-                </div>
 
-                {/* Optional: Scroll Indicators / Shadow Fades */}
-                <div className="absolute top-0 left-0 bottom-12 w-20 bg-gradient-to-r from-[#020617] to-transparent pointer-events-none z-10 hidden md:block" />
-                <div className="absolute top-0 right-0 bottom-12 w-20 bg-gradient-to-l from-[#020617] to-transparent pointer-events-none z-10 hidden md:block" />
+                      {/* Caption */}
+                      <div className="h-[20%] bg-white flex flex-col items-center justify-center px-4 py-2">
+                        <h3 className="text-slate-900 font-bold text-sm md:text-base text-center leading-tight truncate w-full">
+                          {cert.title}
+                        </h3>
+                        <p className="text-slate-500 text-[10px] md:text-xs font-semibold uppercase tracking-wider">
+                          {cert.issuer}
+                        </p>
+                      </div>
+
+                      {/* Tape Effect */}
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-6 bg-blue-100/30 backdrop-blur-sm -rotate-2 border-t border-white/20 shadow-sm" />
+                    </div>
+                  </motion.div>
+                )) : (
+                  <div className="w-full text-center py-20 text-slate-500 border border-dashed border-white/10 rounded-2xl">
+                    <p>No certifications available yet.</p>
+                  </div>
+                )}
               </div>
             </div>
           </motion.section>
