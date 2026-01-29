@@ -13,6 +13,7 @@ import {
   PostgreSqlIcon, DockerIcon, FastApiIcon, GitIcon, TypeScriptIcon
 } from "../components/TechIcons";
 import SpotlightButton from "../components/ui/SpotlightButton";
+import SwipeFillButton from "../components/ui/SwipeFillButton";
 import { supabase } from "../lib/supabase";
 import { featuredProjects } from "../data/projects";
 // TechIcons imports removed as we now use CDN images
@@ -948,30 +949,20 @@ export default function Index() {
 
                 {/* CTAs */}
                 <motion.div className="flex flex-wrap justify-center gap-4" variants={itemVariants}>
-                  <MagneticButton
+                  <SwipeFillButton
                     href="https://docs.google.com/document/d/1HDHDkSANIH_wL_5iHVOJanS65mlz8GZrSR5aSWjLdws/edit?usp=sharing"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#020617] font-bold rounded-xl shadow-2xl shadow-white/10 hover:shadow-white/20 transition-shadow"
+                    variant="primary"
                   >
                     <Download size={20} /> Get My CV
-                  </MagneticButton>
-                  <motion.div
-                    whileHover={{ 
-                      scale: 1.02,
-                      boxShadow: "0 0 0 2px rgba(255, 255, 255, 0.5)"
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    style={{ willChange: "transform" }}
+                  </SwipeFillButton>
+                  <SwipeFillButton
+                    to="/projects"
+                    variant="secondary"
                   >
-                    <Link
-                      to="/projects"
-                      className="flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white/20 text-white font-bold rounded-xl hover:border-white hover:text-white transition-all"
-                    >
-                      View My Work <ArrowRight size={20} />
-                    </Link>
-                  </motion.div>
+                    View My Work <ArrowRight size={20} />
+                  </SwipeFillButton>
                 </motion.div>
 
                 {/* Trusted By Badges */}
@@ -1227,7 +1218,7 @@ export default function Index() {
 
         </motion.section>
 
-        {/* --- CERTIFICATIONS SECTION --- */}
+        {/* --- CERTIFICATIONS SECTION (SCATTERED POLAROID LAYOUT) --- */}
         <motion.section
           id="certifications"
           className="py-24 px-6 bg-gradient-to-b from-transparent to-[#0F172A]/30"
@@ -1238,49 +1229,88 @@ export default function Index() {
         >
           <div className="max-w-6xl mx-auto">
             <motion.h2
-              className="text-sm font-bold uppercase tracking-widest text-[#94A3B8] mb-12 text-center"
+              className="text-sm font-bold uppercase tracking-widest text-[#94A3B8] mb-16 text-center"
               variants={itemVariants}
             >
               Professional Certifications
             </motion.h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {(certifications && certifications.length > 0) ? certifications.map((cert, index) => (
-                <motion.div
-                  key={cert.id || index}
-                  className="group relative rounded-2xl overflow-hidden border border-white/10 bg-slate-900"
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  transition={springTransition}
-                  style={{ willChange: "transform" }}
-                >
-                  <motion.img
-                    src={cert.image_url || cert.image}
-                    alt={cert.title || "Certification"}
-                    loading="lazy"
-                    width="400"
-                    height="300"
-                    className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-                    initial={{ scale: 1.1, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 0.8 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ 
-                      duration: 0.8,
-                      ease: [0.33, 1, 0.68, 1]
+            {/* Scattered Gallery Container */}
+            <div className="relative flex flex-wrap justify-center items-center gap-6 md:gap-8 min-h-[400px]">
+              {(certifications && certifications.length > 0) ? certifications.map((cert, index) => {
+                // Generate random rotation for scattered effect (-6deg to 6deg)
+                const randomRotation = (Math.random() - 0.5) * 12; // -6 to 6
+                const randomDelay = index * 0.1;
+                
+                return (
+                  <motion.div
+                    key={cert.id || index}
+                    className="group relative w-full sm:w-[280px] md:w-[300px] aspect-[4/3] rounded-xl overflow-hidden border-8 border-white/90 bg-white shadow-2xl cursor-pointer"
+                    initial={{ 
+                      opacity: 0,
+                      scale: 0.8,
+                      rotate: randomRotation * 2,
+                      y: 50
                     }}
-                    style={{ willChange: "transform, opacity" }}
-                  />
-                  {/* Subtle Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                  {cert.title && (
-                    <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
-                      <h3 className="text-white font-bold text-sm">{cert.title}</h3>
-                      {cert.issuer && <p className="text-slate-400 text-xs mt-1">{cert.issuer}</p>}
+                    whileInView={{ 
+                      opacity: 1,
+                      scale: 1,
+                      rotate: randomRotation,
+                      y: 0
+                    }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 15,
+                      delay: randomDelay
+                    }}
+                    whileHover={{ 
+                      scale: 1.1,
+                      rotate: 0,
+                      zIndex: 50,
+                      y: -10,
+                      boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
+                    }}
+                    style={{ 
+                      willChange: "transform",
+                      marginTop: index % 2 === 0 ? "0" : "20px",
+                      marginLeft: index % 3 === 0 ? "-10px" : "0",
+                      marginRight: index % 3 === 2 ? "-10px" : "0"
+                    }}
+                  >
+                    {/* Polaroid Photo */}
+                    <div className="relative w-full h-[75%] bg-slate-100 overflow-hidden">
+                      <motion.img
+                        src={cert.image_url || cert.image}
+                        alt={cert.title || "Certification"}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      {/* Subtle Vignette */}
+                      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/20 pointer-events-none" />
                     </div>
-                  )}
-                </motion.div>
-              )) : (
-                <div className="col-span-3 text-center py-12 text-slate-400">
+                    
+                    {/* Polaroid Caption Area */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[25%] bg-white flex items-center justify-center px-4">
+                      <div className="text-center">
+                        {cert.title && (
+                          <h3 className="text-slate-800 font-handwriting text-sm md:text-base font-semibold leading-tight">
+                            {cert.title}
+                          </h3>
+                        )}
+                        {cert.issuer && (
+                          <p className="text-slate-500 text-xs mt-1">{cert.issuer}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Tape Effect on top */}
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-6 bg-yellow-100/40 backdrop-blur-sm rotate-0 shadow-sm border-t border-yellow-200/50" />
+                  </motion.div>
+                );
+              }) : (
+                <div className="w-full text-center py-12 text-slate-400">
                   <p>No certifications available</p>
                 </div>
               )}
