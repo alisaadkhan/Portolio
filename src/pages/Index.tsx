@@ -863,7 +863,7 @@ export default function Index() {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
                     <img
-                      src="/assets/ALI SAAD KHAN.png"
+                      src="/assets/profile-image.png"
                       alt="Ali Saad Khan"
                       loading="eager"
                       width="256"
