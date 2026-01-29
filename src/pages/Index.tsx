@@ -558,7 +558,7 @@ export default function Index() {
           display_name: "Ali Saad Khan",
           headline: "Full Stack Developer | System Architect",
           about_text: "Building scalable, secure, and high-performance web applications with modern technologies.",
-          avatar_url: "/assets/ALI SAAD KHAN.png"
+          avatar_url: "/assets/profile-image.png"
         };
         setProfile(fallbackProfile);
         console.log('👤 Using fallback profile');
@@ -1223,7 +1223,7 @@ export default function Index() {
 
           </motion.section>
 
-          {/* --- CERTIFICATIONS SECTION (LIST-BASED LAYOUT) --- */}
+          {/* --- CERTIFICATIONS SECTION (CAROUSEL LAYOUT) --- */}
           <motion.section
             id="certifications"
             className="py-24 px-6 bg-transparent"
@@ -1232,86 +1232,102 @@ export default function Index() {
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
           >
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <motion.h2
-                className="text-3xl md:text-4xl font-bold text-white mb-4 text-left"
+                className="text-3xl md:text-4xl font-bold text-white mb-4 text-center"
                 variants={itemVariants}
               >
                 Certifications & Achievements
               </motion.h2>
               <motion.p
-                className="text-[#94A3B8] text-lg mb-12 text-left"
+                className="text-[#94A3B8] text-lg mb-12 text-center"
                 variants={itemVariants}
               >
                 Professional credentials that validate my expertise
               </motion.p>
 
-              {/* List-Based Layout */}
-              <div className="space-y-6">
+              {/* Carousel Grid Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
                 {(certifications && certifications.length > 0) ? certifications.map((cert, index) => (
                   <motion.div
                     key={cert.id || index}
-                    className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-[#0F172A]/60 transition-all duration-300"
+                    className="group relative bg-gradient-to-br from-slate-900/80 to-slate-800/60 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300"
                     variants={itemVariants}
-                    whileHover={{
-                      y: -4,
-                      transition: { type: "spring", stiffness: 300, damping: 20 }
-                    }}
+                    whileHover={{ y: -8, scale: 1.02 }}
                   >
-                    <div className="flex flex-col md:flex-row gap-6 items-start">
-                      {/* Certificate Badge/Image */}
-                      <div className="flex-shrink-0">
-                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 border-white/20 bg-slate-800/50">
-                          <img
-                            src={cert.image_url || cert.image}
-                            alt={cert.title}
-                            loading="lazy"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
+                    {/* Certificate Image */}
+                    <div className="aspect-[4/3] bg-gradient-to-br from-slate-800 to-slate-900 p-6 flex items-center justify-center">
+                      <img
+                        src={cert.image_url || cert.image}
+                        alt={cert.title}
+                        loading="lazy"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
 
-                      {/* Certificate Details */}
-                      <div className="flex-1">
-                        <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                    {/* Certificate Details Overlay */}
+                    <div className="p-5">
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-2">
                           {cert.title}
                         </h3>
-                        <p className="text-[#94A3B8] font-medium mb-2">
-                          {cert.issuer}
-                        </p>
-                        {cert.issue_date && (
-                          <p className="text-sm text-slate-500">
-                            Issued: {new Date(cert.issue_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                          </p>
-                        )}
-                        {cert.credential_url && (
-                          <a
-                            href={cert.credential_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 mt-4 text-blue-400 hover:text-blue-300 transition-colors text-sm font-medium"
-                          >
-                            View Credential <ArrowRight size={16} />
-                          </a>
-                        )}
+                        <BadgeCheck className="w-5 h-5 text-blue-400 flex-shrink-0" />
                       </div>
+                      <p className="text-sm text-[#94A3B8] font-medium mb-1">
+                        {cert.issuer}
+                      </p>
+                      {cert.issue_date && (
+                        <p className="text-xs text-slate-500">
+                          {new Date(cert.issue_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </p>
+                      )}
+                    </div>
 
-                      {/* Verified Badge */}
-                      <div className="flex-shrink-0">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full">
-                          <BadgeCheck className="w-5 h-5 text-blue-400" />
-                          <span className="text-sm font-semibold text-blue-400">Verified</span>
-                        </div>
+                    {/* QR Code Placeholder (Bottom overlay) */}
+                    <div className="absolute bottom-3 right-3 w-16 h-16 bg-white/90 rounded-lg p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-full h-full bg-slate-900 rounded flex items-center justify-center text-white text-xs font-mono">
+                        QR
                       </div>
                     </div>
                   </motion.div>
                 )) : (
-                  <div className="w-full text-center py-20 text-slate-500 border border-dashed border-white/10 rounded-2xl">
+                  <div className="col-span-full text-center py-20 text-slate-500 border border-dashed border-white/10 rounded-2xl">
                     <BadgeCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>No certifications available yet.</p>
                   </div>
                 )}
               </div>
+
+              {/* Bio Section Below Certificates */}
+              <motion.div
+                className="max-w-4xl mx-auto mt-16 p-8 md:p-12 bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-sm border border-white/10 rounded-3xl"
+                variants={itemVariants}
+              >
+                <div className="space-y-6 text-lg text-[#94A3B8] leading-relaxed">
+                  <p>
+                    Web designer and expert in{' '}
+                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
+                      UX/UI Design
+                    </span>{' '}
+                    with over{' '}
+                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
+                      4+ years
+                    </span>{' '}
+                    of industry experience. Expertise extends to{' '}
+                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
+                      Full-Stack Development
+                    </span>{' '}
+                    enabling me to create both aesthetically pleasing and easily implementable solutions.
+                  </p>
+                  <p>
+                    Currently works as{' '}
+                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
+                      Lead Full Stack Developer
+                    </span>{' '}
+                    at Freelance, building scalable web applications and secure API architectures.
+                  </p>
+                </div>
+              </motion.div>
             </div>
           </motion.section>
 
@@ -1337,55 +1353,85 @@ export default function Index() {
               </motion.div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Benefit Card 1 */}
+                {/* Benefit Card 1 - Fast Delivery */}
                 <motion.div
-                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
+                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
                   variants={itemVariants}
                   whileHover={{ y: -8 }}
                 >
-                  <div className="w-14 h-14 mb-6 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-                    <Zap className="w-7 h-7 text-blue-400" />
+                  <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+                    <img 
+                      src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=400&fit=crop&q=80" 
+                      alt="Fast Delivery" 
+                      className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] to-transparent"></div>
+                    <div className="absolute bottom-4 left-4 w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30 backdrop-blur-sm">
+                      <Zap className="w-6 h-6 text-blue-400" />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
-                    Fast Delivery
-                  </h3>
-                  <p className="text-[#94A3B8] leading-relaxed">
-                    I work efficiently without compromising quality, delivering production-ready code on schedule
-                  </p>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                      Fast Delivery
+                    </h3>
+                    <p className="text-[#94A3B8] leading-relaxed text-sm">
+                      I work efficiently without compromising quality, delivering production-ready code on schedule
+                    </p>
+                  </div>
                 </motion.div>
 
-                {/* Benefit Card 2 */}
+                {/* Benefit Card 2 - Security First */}
                 <motion.div
-                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
+                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
                   variants={itemVariants}
                   whileHover={{ y: -8 }}
                 >
-                  <div className="w-14 h-14 mb-6 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-                    <Shield className="w-7 h-7 text-blue-400" />
+                  <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+                    <img 
+                      src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=400&fit=crop&q=80" 
+                      alt="Security First" 
+                      className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] to-transparent"></div>
+                    <div className="absolute bottom-4 left-4 w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30 backdrop-blur-sm">
+                      <Shield className="w-6 h-6 text-blue-400" />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
-                    Security First
-                  </h3>
-                  <p className="text-[#94A3B8] leading-relaxed">
-                    Every project is built with security best practices, protecting your users and data from day one
-                  </p>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                      Security First
+                    </h3>
+                    <p className="text-[#94A3B8] leading-relaxed text-sm">
+                      Every project is built with security best practices, protecting your users and data from day one
+                    </p>
+                  </div>
                 </motion.div>
 
-                {/* Benefit Card 3 */}
+                {/* Benefit Card 3 - Results Driven */}
                 <motion.div
-                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
+                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
                   variants={itemVariants}
                   whileHover={{ y: -8 }}
                 >
-                  <div className="w-14 h-14 mb-6 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-                    <Target className="w-7 h-7 text-blue-400" />
+                  <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+                    <img 
+                      src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&q=80" 
+                      alt="Results Driven" 
+                      className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] to-transparent"></div>
+                    <div className="absolute bottom-4 left-4 w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30 backdrop-blur-sm">
+                      <Target className="w-6 h-6 text-blue-400" />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
-                    Results Driven
-                  </h3>
-                  <p className="text-[#94A3B8] leading-relaxed">
-                    I focus on delivering measurable business outcomes, not just writing code
-                  </p>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                      Results Driven
+                    </h3>
+                    <p className="text-[#94A3B8] leading-relaxed text-sm">
+                      I focus on delivering measurable business outcomes, not just writing code
+                    </p>
+                  </div>
                 </motion.div>
               </div>
 
@@ -1431,10 +1477,10 @@ export default function Index() {
                     whileHover={{ x: 4 }}
                     transition={springTransition}
                   >
-                    {/* Purple Dot */}
+                    {/* Timeline Dot */}
                     <motion.div
-                      className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-[#8B5CF6] shadow-lg shadow-purple-500/50"
-                      whileHover={{ scale: 1.3, boxShadow: "0 0 20px rgba(139, 92, 246, 0.8)" }}
+                      className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50"
+                      whileHover={{ scale: 1.3, boxShadow: "0 0 20px rgba(59, 130, 246, 0.8)" }}
                       transition={springTransition}
                     />
 
@@ -1442,11 +1488,11 @@ export default function Index() {
                       <h3 className="text-2xl font-black text-white tracking-tight">{job.role}</h3>
                       <span className="text-sm font-mono text-[#94A3B8] mt-1 md:mt-0">{job.period}</span>
                     </div>
-                    <p className="text-lg text-[#8B5CF6] font-bold mb-4">{job.company}</p>
+                    <p className="text-lg text-white/90 font-bold mb-4">{job.company}</p>
                     <ul className="space-y-2 text-[#94A3B8]">
                       {job.achievements.map((achievement, idx) => (
                         <li key={idx} className="flex gap-3" style={{ lineHeight: 1.6 }}>
-                          <span className="text-[#8B5CF6] mt-1">•</span>
+                          <span className="text-white/60 mt-1">•</span>
                           <span>{achievement}</span>
                         </li>
                       ))}
