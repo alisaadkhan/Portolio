@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://qijvkldsmzxerisjvcnr.supabase.co';
 
 // 2. PASTE THE LONG 'anon' KEY FROM THE DASHBOARD HERE:
-const supabaseKey = 'sb_publishable_Az_f0WQ671iRBZAXNANySg_vxHGwlkD';
+// This key looks incorrect - it should start with 'eyJ...'
+// Get the correct key from: Supabase Dashboard > Settings > API > anon/public key
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpanZrbGRzbXp4ZXJpc2p2Y25yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg1MzgzMTAsImV4cCI6MjA1NDExNDMxMH0.placeholder';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);

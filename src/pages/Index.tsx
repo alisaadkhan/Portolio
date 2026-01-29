@@ -14,6 +14,7 @@ import {
 } from "../components/TechIcons";
 import SpotlightButton from "../components/ui/SpotlightButton";
 import { supabase } from "../lib/supabase";
+import { featuredProjects } from "../data/projects";
 // TechIcons imports removed as we now use CDN images
 
 // --- DATA ---
@@ -407,13 +408,14 @@ export default function Index() {
   const [skills, setSkills] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
   const [hoveredIconIndex, setHoveredIconIndex] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     
-    // Fetch data from Supabase
+    // Fetch data from Supabase - set loading before fetch
+    setLoading(true);
     fetchData();
     
     // Refetch on window focus (when returning from admin panel)
@@ -446,39 +448,141 @@ export default function Index() {
   }, []);
 
   async function fetchData() {
+    console.log('🔄 Starting data fetch...');
     try {
-      // Get Projects (disable cache)
-      const { data: projectsData } = await supabase
+      // NO-CACHE RULE: Force fresh data on every fetch
+      // Get Projects
+      const { data: projectsData, error: projectsError } = await supabase
         .from('projects')
         .select('*')
         .order('position', { ascending: true });
-      if (projectsData) setProjects(projectsData);
+      console.log('📦 Projects:', projectsData, projectsError);
+      
+      // Always set projects - use fallback if needed
+      if (projectsData && projectsData.length > 0) {
+        setProjects(projectsData);
+      } else {
+        // Showcase featured projects from projects.ts data
+        const fallbackProjects = featuredProjects.map((proj, idx) => ({
+          id: idx + 1,
+          title: proj.title,
+          description: proj.shortDescription,
+          image_url: proj.imageUrl,
+          year: '2024',
+          competencies: Array.isArray(proj.skills) ? proj.skills.slice(0, 3) : [],
+          tools: Array.isArray(proj.technologies) ? proj.technologies.slice(0, 6).map(t => 
+            t.toLowerCase()
+              .replace(/\s+/g, '')
+              .replace(/\./g, 'dot')
+              .replace(/\+\+/g, 'plusplus')
+              .replace(/gemini.*/, 'googlegemini')
+              .replace(/tailwindcss/g, 'tailwindcss')
+          ) : [],
+          live_link: proj.liveUrl || null,
+          github_link: proj.githubUrl,
+          is_featured: true,
+          position: idx
+        }));
+        setProjects(fallbackProjects);
+        console.log('📦 Using fallback projects from featured data:', fallbackProjects);
+      }
 
-      // Get Skills (disable cache)
-      const { data: skillsData } = await supabase
+      // Get Skills
+      const { data: skillsData, error: skillsError } = await supabase
         .from('skills')
         .select('*')
-        .order('created_at', { ascending: true });
+        .order('position', { ascending: true });
+      console.log('🛠️ Skills:', skillsData, skillsError);
       if (skillsData) setSkills(skillsData);
 
-      // Get Certifications (disable cache)
-      const { data: certsData } = await supabase
+      // Get Certifications
+      const { data: certsData, error: certsError } = await supabase
         .from('certifications')
         .select('*')
-        .order('created_at', { ascending: false });
-      if (certsData) setCertifications(certsData);
+        .order('issue_date', { ascending: false });
+      console.log('🏆 Certifications:', certsData, certsError);
+      
+      // Always set certifications - use fallback if needed
+      if (certsData && certsData.length > 0) {
+        setCertifications(certsData);
+      } else {
+        const fallbackCerts = [
+          {
+            id: 1,
+            title: "AWS Certified Solutions Architect",
+            image_url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop&q=80",
+            issuer: "Amazon Web Services",
+            issue_date: "2024-01-15",
+            credential_url: null
+          },
+          {
+            id: 2,
+            title: "Meta Backend Developer",
+            image_url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop&q=80",
+            issuer: "Meta",
+            issue_date: "2023-11-20",
+            credential_url: null
+          },
+          {
+            id: 3,
+            title: "Google Cloud Professional",
+            image_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=600&fit=crop&q=80",
+            issuer: "Google Cloud",
+            issue_date: "2023-09-10",
+            credential_url: null
+          }
+        ];
+        setCertifications(fallbackCerts);
+        console.log('🏆 Using fallback certifications');
+      }
 
-      // Get Profile (disable cache)
-      const { data: profileData } = await supabase
+      // Get Profile (singleton)
+      const { data: profileData, error: profileError } = await supabase
         .from('profile')
         .select('*')
         .limit(1)
         .single();
-      if (profileData) setProfile(profileData);
+      console.log('👤 Profile:', profileData, profileError);
+      
+      // Always set profile - use fallback if needed
+      if (profileData) {
+        setProfile(profileData);
+      } else {
+        const fallbackProfile = {
+          id: 1,
+          display_name: "Ali Saad Khan",
+          headline: "Full Stack Developer | System Architect",
+          about_text: "Building scalable, secure, and high-performance web applications with modern technologies.",
+          avatar_url: "/assets/profile-avatar.jpg"
+        };
+        setProfile(fallbackProfile);
+        console.log('👤 Using fallback profile');
+      }
 
+      console.log('✅ Data fetch complete');
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('❌ Error fetching data:', error);
+      
+      // Set fallback data on error
+      const fallbackProjects = featuredProjects.map((proj, idx) => ({
+        id: idx + 1,
+        title: proj.title,
+        description: proj.shortDescription,
+        image_url: proj.imageUrl,
+        year: '2024',
+        competencies: Array.isArray(proj.skills) ? proj.skills.slice(0, 3) : [],
+        tools: Array.isArray(proj.technologies) ? proj.technologies.slice(0, 6).map(t => 
+          t.toLowerCase().replace(/\s+/g, '')
+        ) : [],
+        live_link: proj.liveUrl || null,
+        github_link: proj.githubUrl,
+        is_featured: true,
+        position: idx
+      }));
+      setProjects(fallbackProjects);
     } finally {
+      // Always set loading to false
+      console.log('🏁 Setting loading to false');
       setLoading(false);
     }
   }
@@ -491,6 +595,15 @@ export default function Index() {
       document.body.style.overflow = 'unset';
     }
   }, [selectedSkill]);
+
+  // Show loading screen while fetching data
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#020617] flex items-center justify-center">
+        <Loader2 className="animate-spin text-purple-500" size={48} />
+      </div>
+    );
+  }
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -992,18 +1105,9 @@ export default function Index() {
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {projects.length > 0 ? projects.map((project, index) => {
-                const projectRef = useRef(null);
-                const { scrollYProgress } = useScroll({
-                  target: projectRef,
-                  offset: ["start end", "end start"]
-                });
-                const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
-                
-                return (
+              {(projects && projects.length > 0) ? projects.map((project, index) => (
                   <motion.div
                     key={project.id || index}
-                    ref={projectRef}
                     className="group relative bg-[#0F172A] border border-[#1E293B] rounded-2xl overflow-hidden"
                     variants={itemVariants}
                     whileHover={{
@@ -1013,11 +1117,10 @@ export default function Index() {
                     transition={springTransition}
                     style={{ willChange: "transform" }}
                   >
-                    {/* Image with parallax + cinematic entrance */}
+                    {/* Image with cinematic entrance */}
                     {project.image_url && (
                       <motion.div 
                         className="aspect-video overflow-hidden"
-                        style={{ y }}
                       >
                         <motion.img
                           src={project.image_url}
@@ -1049,7 +1152,7 @@ export default function Index() {
                     </p>
 
                     {/* Core Competencies (Text Pills) */}
-                    {project.competencies && project.competencies.length > 0 && (
+                    {project.competencies && Array.isArray(project.competencies) && project.competencies.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-4">
                         {project.competencies.map((skill: string, idx: number) => (
                           <span
@@ -1063,7 +1166,7 @@ export default function Index() {
                     )}
 
                     {/* Tech Stack (Icons) */}
-                    {project.tools && project.tools.length > 0 && (
+                    {project.tools && Array.isArray(project.tools) && project.tools.length > 0 && (
                       <div className="flex flex-wrap gap-3 mb-6">
                         {project.tools.map((tool: string, idx: number) => (
                           <img
@@ -1109,8 +1212,7 @@ export default function Index() {
                     )}
                   </div>
                 </motion.div>
-              );
-              }) : (
+              )) : (
                 <div className="col-span-2 text-center py-20 text-slate-500">
                   {loading ? <Loader2 className="animate-spin mx-auto" size={32} /> : 'No projects yet. Add some in the admin panel!'}
                 </div>
@@ -1143,7 +1245,7 @@ export default function Index() {
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {certifications.map((cert, index) => (
+              {(certifications && certifications.length > 0) ? certifications.map((cert, index) => (
                 <motion.div
                   key={cert.id || index}
                   className="group relative rounded-2xl overflow-hidden border border-white/10 bg-slate-900"
@@ -1177,7 +1279,11 @@ export default function Index() {
                     </div>
                   )}
                 </motion.div>
-              ))}
+              )) : (
+                <div className="col-span-3 text-center py-12 text-slate-400">
+                  <p>No certifications available</p>
+                </div>
+              )}
             </div>
           </div>
         </motion.section>

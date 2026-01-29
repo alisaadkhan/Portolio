@@ -24,8 +24,8 @@ export default function AdminLogin() {
         if (error) {
             alert("Login Failed: " + error.message);
         } else {
-            // Success!
-            navigate("/admin/dashboard");
+            // Success! Navigate to admin root
+            navigate("/admin");
         }
     };
 
