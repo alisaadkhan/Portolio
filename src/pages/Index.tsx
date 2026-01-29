@@ -511,17 +511,17 @@ export default function Index() {
           {
             id: 1,
             title: "JavaScript Essentials 1",
-            image_url: "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=800&h=600&fit=crop&q=80",
+            image_url: "/assets/certifications/cisco-javascript.png",
             issuer: "Cisco Networking Academy",
-            issue_date: "2024-01-15",
+            issue_date: "2025-10-15",
             credential_url: null
           },
           {
             id: 2,
             title: "Networking Essentials",
-            image_url: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&h=600&fit=crop&q=80",
+            image_url: "/assets/certifications/cisco-networking.png",
             issuer: "Cisco Networking Academy",
-            issue_date: "2023-11-20",
+            issue_date: "2025-05-24",
             credential_url: null
           },
           {
