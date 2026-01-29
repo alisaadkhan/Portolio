@@ -816,13 +816,13 @@ export default function Index() {
                       {item.name}
                     </a>
                   ))}
-                  <a
+                  <SpotlightButton
                     href="#contact"
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[#1E293B] border border-white/10 text-white font-bold rounded-xl text-center shadow-lg mt-2 hover:border-white/50 transition-all"
+                    className="rounded-full w-full mt-2"
                   >
                     <MessageCircle className="w-4 h-4" />
                     Get in Touch
-                  </a>
+                  </SpotlightButton>
                 </div>
               </motion.div>
             )}
