@@ -1216,9 +1216,12 @@ export default function Index() {
               </div>
             </div>
             <div className="flex justify-center mt-16">
-              <SpotlightButton to="/projects">
+              <SwipeFillButton
+                href="/projects"
+                variant="primary"
+              >
                 View My All Work
-              </SpotlightButton>
+              </SwipeFillButton>
             </div>
 
           </motion.section>
