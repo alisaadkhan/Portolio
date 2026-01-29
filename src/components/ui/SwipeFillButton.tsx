@@ -38,12 +38,12 @@ export default function SwipeFillButton({
 }: SwipeFillButtonProps) {
   const buttonRef = useRef<HTMLAnchorElement | HTMLButtonElement>(null);
 
-  const baseClasses = "group relative overflow-hidden rounded-full border border-white bg-transparent px-8 py-3 text-white transition-all duration-300 hover:text-black font-bold";
+  const baseClasses = "group relative overflow-hidden rounded-full border border-white bg-transparent px-8 py-3 text-white transition-all duration-300 hover:text-black font-bold flex items-center justify-center gap-2";
 
   const content = (
     <>
       <span className="absolute inset-0 -z-10 w-0 bg-white transition-all duration-300 ease-out group-hover:w-full"></span>
-      <span className="relative z-10 flex items-center gap-2">
+      <span className="relative z-10 flex items-center justify-center gap-2">
         {children}
       </span>
     </>

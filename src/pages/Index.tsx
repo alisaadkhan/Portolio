@@ -558,7 +558,7 @@ export default function Index() {
           display_name: "Ali Saad Khan",
           headline: "Full Stack Developer | System Architect",
           about_text: "Building scalable, secure, and high-performance web applications with modern technologies.",
-          avatar_url: "/assets/profile-avatar.jpg"
+          avatar_url: "/assets/ALI SAAD KHAN.png"
         };
         setProfile(fallbackProfile);
         console.log('👤 Using fallback profile');
@@ -777,12 +777,12 @@ export default function Index() {
                     </motion.a>
                   );
                 })}
-                <SpotlightButton
+                <SwipeFillButton
                   href="#contact"
-                  className="rounded-full"
+                  variant="primary"
                 >
-                  Get in Touch
-                </SpotlightButton>
+                  HIRE ME
+                </SwipeFillButton>
               </div>
 
               {/* Mobile Toggle */}
@@ -816,13 +816,14 @@ export default function Index() {
                       {item.name}
                     </a>
                   ))}
-                  <SpotlightButton
+                  <SwipeFillButton
                     href="#contact"
-                    className="rounded-full w-full mt-2"
+                    variant="primary"
+                    className="w-full mt-2"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    Get in Touch
-                  </SpotlightButton>
+                    HIRE ME
+                  </SwipeFillButton>
                 </div>
               </motion.div>
             )}
@@ -862,7 +863,7 @@ export default function Index() {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
                     <img
-                      src="/assets/profile-avatar.jpg"
+                      src="/assets/ALI SAAD KHAN.png"
                       alt="Ali Saad Khan"
                       loading="eager"
                       width="256"
@@ -1222,69 +1223,185 @@ export default function Index() {
 
           </motion.section>
 
-          {/* --- CERTIFICATIONS SECTION (SCATTERED POLAROID LAYOUT) --- */}
+          {/* --- CERTIFICATIONS SECTION (LIST-BASED LAYOUT) --- */}
           <motion.section
             id="certifications"
-            className="py-24 px-6 bg-gradient-to-b from-transparent to-[#0F172A]/30"
+            className="py-24 px-6 bg-transparent"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
           >
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-4xl mx-auto">
               <motion.h2
-                className="text-sm font-bold uppercase tracking-widest text-[#94A3B8] mb-16 text-center"
+                className="text-3xl md:text-4xl font-bold text-white mb-4 text-left"
                 variants={itemVariants}
               >
-                Professional Certifications
+                Certifications & Achievements
               </motion.h2>
+              <motion.p
+                className="text-[#94A3B8] text-lg mb-12 text-left"
+                variants={itemVariants}
+              >
+                Professional credentials that validate my expertise
+              </motion.p>
 
-              {/* "Messy Stack" Layout */}
-              <div className="flex flex-wrap justify-center gap-8 md:gap-12 relative">
+              {/* List-Based Layout */}
+              <div className="space-y-6">
                 {(certifications && certifications.length > 0) ? certifications.map((cert, index) => (
                   <motion.div
                     key={cert.id || index}
-                    className={`relative w-[300px] md:w-[380px] aspect-[4/3] group cursor-pointer ${cert.rotation || ''}`}
+                    className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-[#0F172A]/60 transition-all duration-300"
                     variants={itemVariants}
                     whileHover={{
-                      scale: 1.1,
-                      rotate: 0,
-                      zIndex: 50,
+                      y: -4,
                       transition: { type: "spring", stiffness: 300, damping: 20 }
                     }}
-                    style={{ willChange: "transform" }}
                   >
-                    <div className="relative h-full rounded-xl overflow-hidden border-8 border-white bg-white shadow-xl transition-all duration-300 group-hover:shadow-2xl">
-                      {/* Polaroid Image */}
-                      <div className="relative w-full h-[80%] bg-slate-100 overflow-hidden">
-                        <img
-                          src={cert.image_url || cert.image}
-                          alt={cert.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                        />
+                    <div className="flex flex-col md:flex-row gap-6 items-start">
+                      {/* Certificate Badge/Image */}
+                      <div className="flex-shrink-0">
+                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border-2 border-white/20 bg-slate-800/50">
+                          <img
+                            src={cert.image_url || cert.image}
+                            alt={cert.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
                       </div>
 
-                      {/* Caption */}
-                      <div className="h-[20%] bg-white flex flex-col items-center justify-center px-4 py-2">
-                        <h3 className="text-slate-900 font-bold text-sm md:text-base text-center leading-tight truncate w-full">
+                      {/* Certificate Details */}
+                      <div className="flex-1">
+                        <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
                           {cert.title}
                         </h3>
-                        <p className="text-slate-500 text-[10px] md:text-xs font-semibold uppercase tracking-wider">
+                        <p className="text-[#94A3B8] font-medium mb-2">
                           {cert.issuer}
                         </p>
+                        {cert.issue_date && (
+                          <p className="text-sm text-slate-500">
+                            Issued: {new Date(cert.issue_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                          </p>
+                        )}
+                        {cert.credential_url && (
+                          <a
+                            href={cert.credential_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 mt-4 text-blue-400 hover:text-blue-300 transition-colors text-sm font-medium"
+                          >
+                            View Credential <ArrowRight size={16} />
+                          </a>
+                        )}
                       </div>
 
-                      {/* Tape Effect */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-6 bg-blue-100/30 backdrop-blur-sm -rotate-2 border-t border-white/20 shadow-sm" />
+                      {/* Verified Badge */}
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full">
+                          <BadgeCheck className="w-5 h-5 text-blue-400" />
+                          <span className="text-sm font-semibold text-blue-400">Verified</span>
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 )) : (
                   <div className="w-full text-center py-20 text-slate-500 border border-dashed border-white/10 rounded-2xl">
+                    <BadgeCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>No certifications available yet.</p>
                   </div>
                 )}
               </div>
+            </div>
+          </motion.section>
+
+          {/* --- WHY WORK WITH ME SECTION --- */}
+          <motion.section
+            className="py-24 px-6 bg-transparent"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
+          >
+            <div className="max-w-5xl mx-auto">
+              <motion.div
+                className="text-center mb-16"
+                variants={itemVariants}
+              >
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+                  Why Work With Me?
+                </h2>
+                <p className="text-[#94A3B8] text-lg md:text-xl max-w-3xl mx-auto">
+                  I bring a unique combination of technical expertise, business acumen, and commitment to delivering exceptional results
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Benefit Card 1 */}
+                <motion.div
+                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
+                  variants={itemVariants}
+                  whileHover={{ y: -8 }}
+                >
+                  <div className="w-14 h-14 mb-6 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                    <Zap className="w-7 h-7 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
+                    Fast Delivery
+                  </h3>
+                  <p className="text-[#94A3B8] leading-relaxed">
+                    I work efficiently without compromising quality, delivering production-ready code on schedule
+                  </p>
+                </motion.div>
+
+                {/* Benefit Card 2 */}
+                <motion.div
+                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
+                  variants={itemVariants}
+                  whileHover={{ y: -8 }}
+                >
+                  <div className="w-14 h-14 mb-6 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                    <Shield className="w-7 h-7 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
+                    Security First
+                  </h3>
+                  <p className="text-[#94A3B8] leading-relaxed">
+                    Every project is built with security best practices, protecting your users and data from day one
+                  </p>
+                </motion.div>
+
+                {/* Benefit Card 3 */}
+                <motion.div
+                  className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
+                  variants={itemVariants}
+                  whileHover={{ y: -8 }}
+                >
+                  <div className="w-14 h-14 mb-6 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                    <Target className="w-7 h-7 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
+                    Results Driven
+                  </h3>
+                  <p className="text-[#94A3B8] leading-relaxed">
+                    I focus on delivering measurable business outcomes, not just writing code
+                  </p>
+                </motion.div>
+              </div>
+
+              {/* CTA */}
+              <motion.div
+                className="text-center mt-16"
+                variants={itemVariants}
+              >
+                <SwipeFillButton
+                  href="#contact"
+                  variant="primary"
+                  className="text-lg px-12 py-4"
+                >
+                  Let's Build Something Great
+                </SwipeFillButton>
+              </motion.div>
             </div>
           </motion.section>
 
@@ -1343,7 +1460,7 @@ export default function Index() {
           {/* --- FAQ SECTION --- */}
           <motion.section
             id="faq"
-            className="py-24 px-6 bg-gradient-to-b from-[#0F172A]/30 to-transparent"
+            className="py-24 px-6 bg-transparent"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
