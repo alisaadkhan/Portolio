@@ -11,6 +11,8 @@ interface SwipeFillButtonProps {
   target?: string;
   rel?: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 /**
@@ -30,41 +32,40 @@ export default function SwipeFillButton({
   variant = "primary",
   target,
   rel,
-  onClick
+  onClick,
+  type = "button",
+  disabled = false
 }: SwipeFillButtonProps) {
   const buttonRef = useRef<HTMLAnchorElement | HTMLButtonElement>(null);
 
   const baseClasses = "relative flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-xl overflow-hidden group transition-all duration-300";
-  
-  const variantClasses = variant === "primary" 
-    ? "bg-[#0F766E] text-white shadow-2xl shadow-teal-500/20 border-2 border-teal-500/30"
-    : "bg-transparent border-2 border-teal-500/40 text-teal-100";
+
+  const variantClasses = variant === "primary"
+    ? "bg-white text-black shadow-xl shadow-white/5 border border-white/20"
+    : "bg-transparent border border-white/30 text-white";
 
   const content = (
     <>
       {/* Slide Fill Background */}
       <motion.div
-        className={`absolute inset-0 z-0 ${
-          variant === "primary" 
-            ? "bg-teal-400" 
-            : "bg-teal-500"
-        }`}
+        className={`absolute inset-0 z-0 ${variant === "primary"
+          ? "bg-blue-600"
+          : "bg-white"
+          }`}
         initial={{ x: "-100%" }}
         whileHover={{ x: 0 }}
         transition={{
           type: "spring",
-          stiffness: 200,
-          damping: 20,
-          duration: 0.6
+          stiffness: 150,
+          damping: 20
         }}
       />
 
       {/* Text Content with Color Switch */}
-      <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${
-        variant === "primary"
-          ? "group-hover:text-[#020617]"
-          : "group-hover:text-white"
-      }`}>
+      <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${variant === "primary"
+        ? "group-hover:text-white"
+        : "group-hover:text-black"
+        }`}>
         {children}
       </span>
     </>
@@ -79,10 +80,10 @@ export default function SwipeFillButton({
         target={target}
         rel={rel}
         className={`${baseClasses} ${variantClasses} ${className}`}
-        whileHover={{ 
+        whileHover={{
           scale: 1.02,
-          boxShadow: variant === "primary" 
-            ? "0 0 0 2px rgba(45, 212, 191, 0.6)" 
+          boxShadow: variant === "primary"
+            ? "0 0 0 2px rgba(45, 212, 191, 0.6)"
             : "0 0 0 2px rgba(20, 184, 166, 0.8)"
         }}
         whileTap={{ scale: 0.95 }}
@@ -100,10 +101,10 @@ export default function SwipeFillButton({
       <Link to={to}>
         <motion.div
           className={`${baseClasses} ${variantClasses} ${className}`}
-          whileHover={{ 
+          whileHover={{
             scale: 1.02,
-            boxShadow: variant === "primary" 
-              ? "0 0 0 2px rgba(255, 255, 255, 0.5)" 
+            boxShadow: variant === "primary"
+              ? "0 0 0 2px rgba(255, 255, 255, 0.5)"
               : "0 0 0 2px rgba(255, 255, 255, 0.8)"
           }}
           whileTap={{ scale: 0.95 }}
@@ -121,14 +122,16 @@ export default function SwipeFillButton({
     <motion.button
       ref={buttonRef as React.RefObject<HTMLButtonElement>}
       onClick={onClick}
-      className={`${baseClasses} ${variantClasses} ${className}`}
-      whileHover={{ 
+      type={type}
+      disabled={disabled}
+      className={`${baseClasses} ${variantClasses} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      whileHover={!disabled ? {
         scale: 1.02,
-        boxShadow: variant === "primary" 
-          ? "0 0 0 2px rgba(255, 255, 255, 0.5)" 
+        boxShadow: variant === "primary"
+          ? "0 0 0 2px rgba(255, 255, 255, 0.5)"
           : "0 0 0 2px rgba(255, 255, 255, 0.8)"
-      }}
-      whileTap={{ scale: 0.95 }}
+      } : {}}
+      whileTap={!disabled ? { scale: 0.95 } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{ willChange: "transform" }}
     >
