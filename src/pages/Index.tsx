@@ -1235,48 +1235,52 @@ export default function Index() {
               Professional Certifications
             </motion.h2>
 
-            {/* Scattered Gallery Container */}
-            <div className="relative flex flex-wrap justify-center items-center gap-6 md:gap-8 min-h-[400px]">
+            {/* Scattered Stack Container - Overlapping Cards */}
+            <div className="relative flex flex-wrap justify-center items-center min-h-[500px] max-w-4xl mx-auto">
               {(certifications && certifications.length > 0) ? certifications.map((cert, index) => {
-                // Generate random rotation for scattered effect (-6deg to 6deg)
-                const randomRotation = (Math.random() - 0.5) * 12; // -6 to 6
-                const randomDelay = index * 0.1;
+                // Create staggered rotation pattern for natural "messy desk" look
+                const rotations = [-8, 4, -5, 6, -3, 7, -6, 5];
+                const randomRotation = rotations[index % rotations.length] || (Math.random() - 0.5) * 12;
+                const randomDelay = index * 0.15;
+                
+                // Overlap positioning - each card overlaps the previous
+                const overlapOffset = index * -80; // Negative to create overlap
                 
                 return (
                   <motion.div
                     key={cert.id || index}
-                    className="group relative w-full sm:w-[280px] md:w-[300px] aspect-[4/3] rounded-xl overflow-hidden border-8 border-white/90 bg-white shadow-2xl cursor-pointer"
+                    className="group absolute w-[320px] md:w-[360px] aspect-[4/3] rounded-xl overflow-hidden border-8 border-white/95 bg-white shadow-2xl cursor-pointer"
                     initial={{ 
                       opacity: 0,
                       scale: 0.8,
-                      rotate: randomRotation * 2,
-                      y: 50
+                      rotate: randomRotation * 1.5,
+                      y: 100
                     }}
                     whileInView={{ 
                       opacity: 1,
                       scale: 1,
                       rotate: randomRotation,
-                      y: 0
+                      y: 0,
+                      x: overlapOffset
                     }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{
                       type: "spring",
                       stiffness: 200,
-                      damping: 15,
+                      damping: 20,
                       delay: randomDelay
                     }}
                     whileHover={{ 
-                      scale: 1.1,
+                      scale: 1.15,
                       rotate: 0,
                       zIndex: 50,
-                      y: -10,
-                      boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
+                      y: -20,
+                      x: 0,
+                      boxShadow: "0 30px 60px -15px rgba(0, 0, 0, 0.9)"
                     }}
                     style={{ 
                       willChange: "transform",
-                      marginTop: index % 2 === 0 ? "0" : "20px",
-                      marginLeft: index % 3 === 0 ? "-10px" : "0",
-                      marginRight: index % 3 === 2 ? "-10px" : "0"
+                      zIndex: index
                     }}
                   >
                     {/* Polaroid Photo */}
