@@ -856,9 +856,9 @@ export default function Index() {
                     <span className="text-[10px] font-bold text-white uppercase tracking-wider">Verified</span>
                   </motion.div>
 
-                  {/* Circular Portrait - REDUCED SIZE */}
+                  {/* Circular Portrait - RESPONSIVE SIZE */}
                   <motion.div
-                    className="relative w-64 h-64 rounded-full overflow-hidden border-4 border-white/10 shadow-2xl bg-black group"
+                    className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/10 shadow-2xl bg-black group"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
@@ -887,14 +887,14 @@ export default function Index() {
                 {/* Text Content - CENTERED */}
                 <div className="space-y-6 max-w-3xl">
                   {/* Headline - MASKED REVEAL with ROTATION */}
-                  <div className="overflow-hidden" style={{ minHeight: "120px" }}>
+                  <div className="overflow-hidden" style={{ minHeight: "80px" }}>
                     <motion.h1
-                      className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter"
+                      className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter"
                       initial="hidden"
                       animate="visible"
                     >
                       {/* Line 1: Solo Product Team */}
-                      <div className="overflow-hidden mb-2" style={{ minHeight: "60px" }}>
+                      <div className="overflow-hidden mb-2" style={{ minHeight: "40px" }}>
                         {"Solo Product Team".split(" ").map((word, wordIndex) => (
                           <span key={wordIndex} className="inline-block overflow-hidden mr-4">
                             <motion.span
@@ -916,7 +916,7 @@ export default function Index() {
                         ))}
                       </div>
                       {/* Line 2: for Your SaaS */}
-                      <div className="overflow-hidden" style={{ minHeight: "60px" }}>
+                      <div className="overflow-hidden" style={{ minHeight: "40px" }}>
                         <span className="bg-gradient-to-r from-white to-[#94A3B8] bg-clip-text text-transparent">
                           {"for Your SaaS".split(" ").map((word, wordIndex) => (
                             <span key={wordIndex} className="inline-block overflow-hidden mr-4">
@@ -944,7 +944,7 @@ export default function Index() {
 
                   {/* Bio Text */}
                   <motion.p
-                    className="text-lg md:text-xl text-[#94A3B8] leading-relaxed"
+                    className="text-base sm:text-lg md:text-xl text-[#94A3B8] leading-relaxed"
                     variants={itemVariants}
                   >
                     I architect, develop, and deploy secure backend systems end-to-end: from database design to
@@ -1250,7 +1250,7 @@ export default function Index() {
               </motion.p>
 
               {/* Carousel Grid Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-16">
                 {(certifications && certifications.length > 0) ? certifications.map((cert, index) => (
                   <motion.div
                     key={cert.id || index}
@@ -1303,10 +1303,10 @@ export default function Index() {
 
               {/* Bio Section Below Certificates */}
               <motion.div
-                className="max-w-4xl mx-auto mt-16 p-8 md:p-12 bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-sm border border-white/10 rounded-3xl"
+                className="max-w-4xl mx-auto mt-16 p-6 sm:p-8 md:p-12 bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl"
                 variants={itemVariants}
               >
-                <div className="space-y-6 text-lg text-[#94A3B8] leading-relaxed">
+                <div className="space-y-4 sm:space-y-6 text-sm sm:text-base md:text-lg text-[#94A3B8] leading-relaxed">
                   <p>
                     Web designer and expert in{' '}
                     <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
@@ -1355,7 +1355,7 @@ export default function Index() {
                 </p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                 {/* Benefit Card 1 - Fast Delivery */}
                 <motion.div
                   className="group relative bg-[#0F172A]/40 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/30 hover:bg-[#0F172A]/60 transition-all duration-300"
