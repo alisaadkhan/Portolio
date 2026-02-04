@@ -11,7 +11,7 @@ interface IdentityPanelProps {
 
 const IdentityPanel = ({ activeSection, onNavigate }: IdentityPanelProps) => {
   const [imgError, setImgError] = useState(false);
-  const profileImage = "/profile.jpg"; // place your uploaded photo here (public/profile.jpg)
+  const profileImage = "https://github.com/alisaadkhan/Portolio/blob/main/assets/profile.jpg?raw=true";
   const fallbackImage =
     "https://images.unsplash.com/photo-1527443224154-dc2c8a52b8ea?auto=format&fit=crop&w=1200&q=80";
 
@@ -34,7 +34,7 @@ const IdentityPanel = ({ activeSection, onNavigate }: IdentityPanelProps) => {
           transition={{ duration: 0.4, delay: 0.1 }}
           className="text-lg font-medium tracking-tight text-primary sm:text-xl"
         >
-          Full-Stack Solutions Architect
+          Full-Stack Engineer | Backend & Secure Web Platforms | Python • PHP • API Architecture
         </motion.h2>
 
         <motion.p
@@ -43,7 +43,7 @@ const IdentityPanel = ({ activeSection, onNavigate }: IdentityPanelProps) => {
           transition={{ duration: 0.4, delay: 0.2 }}
           className="mt-4 max-w-2xl leading-relaxed text-foreground text-base"
         >
-          I don't just write code; I engineer solutions. I specialize in architecting secure, scalable systems that bridge complex backend logic with intuitive user experiences. With a foundation in Kali Linux and Low-Level Optimization, I build software where security and performance are priorities, not afterthoughts.
+          I specialize in architecting secure, scalable systems that bridge complex backend logic with intuitive user experiences. With expertise in Python, PHP, and API architecture, I build software where security and performance are priorities, not afterthoughts.
         </motion.p>
 
         {/* Contact Details */}
@@ -99,14 +99,14 @@ const IdentityPanel = ({ activeSection, onNavigate }: IdentityPanelProps) => {
             {!imgError ? (
               <img
                 src={profileImage}
-                alt="Ali Saad Khan"
+                alt="Ali Saad Khan - Full Stack Engineer"
                 className="profile-image"
                 onError={() => setImgError(true)}
               />
             ) : (
               <img
                 src={fallbackImage}
-                alt="Ali Saad Khan"
+                alt="Ali Saad Khan - Full Stack Engineer"
                 className="profile-image"
               />
             )}

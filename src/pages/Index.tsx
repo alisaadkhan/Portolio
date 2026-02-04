@@ -863,8 +863,8 @@ export default function Index() {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
                     <img
-                      src="/assets/profile-image.png"
-                      alt="Ali Saad Khan"
+                      src="https://github.com/alisaadkhan/Portolio/blob/main/assets/profile.jpg?raw=true"
+                      alt="Ali Saad Khan - Full Stack Engineer"
                       loading="eager"
                       width="256"
                       height="256"
@@ -893,9 +893,9 @@ export default function Index() {
                       initial="hidden"
                       animate="visible"
                     >
-                      {/* Line 1: Solo Product Team */}
+                      {/* Line 1: Ali Saad Khan */}
                       <div className="overflow-hidden mb-2" style={{ minHeight: "40px" }}>
-                        {"Solo Product Team".split(" ").map((word, wordIndex) => (
+                        {"Ali Saad Khan".split(" ").map((word, wordIndex) => (
                           <span key={wordIndex} className="inline-block overflow-hidden mr-4">
                             <motion.span
                               initial={{ y: "100%", rotate: 3, opacity: 0 }}
@@ -915,42 +915,16 @@ export default function Index() {
                           </span>
                         ))}
                       </div>
-                      {/* Line 2: for Your SaaS */}
-                      <div className="overflow-hidden" style={{ minHeight: "40px" }}>
-                        <span className="bg-gradient-to-r from-white to-[#94A3B8] bg-clip-text text-transparent">
-                          {"for Your SaaS".split(" ").map((word, wordIndex) => (
-                            <span key={wordIndex} className="inline-block overflow-hidden mr-4">
-                              <motion.span
-                                initial={{ y: "100%", rotate: 3, opacity: 0 }}
-                                animate={{ y: 0, rotate: 0, opacity: 1 }}
-                                transition={{
-                                  duration: 0.6,
-                                  delay: 0.3 + (wordIndex * 0.1),
-                                  ease: [0.33, 1, 0.68, 1],
-                                  type: "spring",
-                                  stiffness: 100,
-                                  damping: 15
-                                }}
-                                style={{ display: "inline-block", willChange: "transform, opacity" }}
-                              >
-                                {word}
-                              </motion.span>
-                            </span>
-                          ))}
-                        </span>
-                      </div>
                     </motion.h1>
                   </div>
 
-                  {/* Bio Text */}
-                  <motion.p
-                    className="text-base sm:text-lg md:text-xl text-[#94A3B8] leading-relaxed"
+                  {/* SEO-optimized H2 subtitle */}
+                  <motion.h2
+                    className="text-lg sm:text-xl md:text-2xl text-white font-semibold leading-relaxed"
                     variants={itemVariants}
                   >
-                    I architect, develop, and deploy secure backend systems end-to-end: from database design to
-                    production-ready APIs in Python/Django and Next.js. With 4+ years of experience and AI-accelerated
-                    workflows, you get a senior backend engineer, security specialist, and DevOps engineer in one.
-                  </motion.p>
+                    Full-Stack Engineer | Backend & Secure Web Platforms | Python • PHP • API Architecture
+                  </motion.h2>
 
                   {/* CTAs */}
                   <motion.div className="flex flex-wrap justify-center gap-4" variants={itemVariants}>

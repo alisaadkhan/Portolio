@@ -115,12 +115,12 @@ export default function Home() {
                         </div>
 
                         <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-[0.95]">
-                            {profile?.display_name || "Solo product team"}
+                            Ali Saad Khan
                         </h1>
 
                         <div className="h-16 md:h-auto mb-8">
                             <p className="text-xl md:text-2xl text-purple-400 font-medium">
-                                <Typewriter text={profile?.headline || "Full Stack Solutions Architect"} delay={500} />
+                                Full-Stack Engineer | Backend & Secure Web Platforms | Python • PHP • API Architecture
                             </p>
                         </div>
 
@@ -150,13 +150,11 @@ export default function Home() {
                         {/* Circle Container */}
                         <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-2 border-white/10 p-2">
                             <div className="w-full h-full rounded-full overflow-hidden bg-white/5 relative">
-                                {profile?.avatar_url ? (
-                                    <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-600 bg-black">
-                                        <span className="text-6xl">Ali</span>
-                                    </div>
-                                )}
+                                <img 
+                                    src="https://github.com/alisaadkhan/Portolio/blob/main/assets/profile.jpg?raw=true" 
+                                    alt="Ali Saad Khan - Full Stack Engineer" 
+                                    className="w-full h-full object-cover" 
+                                />
                             </div>
 
                             {/* Verified Badge */}
