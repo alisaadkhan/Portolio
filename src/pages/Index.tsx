@@ -926,6 +926,17 @@ export default function Index() {
                     Full-Stack Engineer | Backend & Secure Web Platforms | Python • PHP • API Architecture
                   </motion.h2>
 
+                  {/* About Me Paragraph - Moved from Bio Section */}
+                  <motion.p
+                    className="text-base md:text-lg text-[#94A3B8] leading-relaxed mt-6 max-w-2xl mx-auto text-center"
+                    variants={itemVariants}
+                  >
+                    <strong className="text-white">Full-Stack Engineer</strong> specialized in architecting secure, high-performance web platforms. I leverage{' '}
+                    <strong className="text-white">Python</strong> and{' '}
+                    <strong className="text-white">PHP</strong> to build scalable{' '}
+                    <strong className="text-white">API architectures</strong> and robust backend systems. My focus is on writing clean, efficient code that prioritizes data security and system reliability over superficial features.
+                  </motion.p>
+
                   {/* CTAs */}
                   <motion.div className="flex flex-wrap justify-center gap-4" variants={itemVariants}>
                     <SwipeFillButton
@@ -1275,20 +1286,6 @@ export default function Index() {
                 )}
               </div>
 
-              {/* Bio Section Below Certificates */}
-              <motion.div
-                className="max-w-4xl mx-auto mt-16 p-6 sm:p-8 md:p-12 bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl"
-                variants={itemVariants}
-              >
-                <div className="space-y-4 sm:space-y-6 text-sm sm:text-base md:text-lg text-[#94A3B8] leading-relaxed">
-                  <p>
-                    <strong className="text-white">Full-Stack Engineer</strong> specialized in architecting secure, high-performance web platforms. I leverage{' '}
-                    <strong className="text-white">Python</strong> and{' '}
-                    <strong className="text-white">PHP</strong> to build scalable{' '}
-                    <strong className="text-white">API architectures</strong> and robust backend systems. My focus is on writing clean, efficient code that prioritizes data security and system reliability over superficial features.
-                  </p>
-                </div>
-              </motion.div>
             </div>
           </motion.section>
 
