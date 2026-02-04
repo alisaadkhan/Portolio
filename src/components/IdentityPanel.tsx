@@ -11,7 +11,7 @@ interface IdentityPanelProps {
 
 const IdentityPanel = ({ activeSection, onNavigate }: IdentityPanelProps) => {
   const [imgError, setImgError] = useState(false);
-  const profileImage = "https://github.com/alisaadkhan/Portolio/blob/main/assets/profile.jpg?raw=true";
+  const profileImage = "/profile.png";
   const fallbackImage =
     "https://images.unsplash.com/photo-1527443224154-dc2c8a52b8ea?auto=format&fit=crop&w=1200&q=80";
 

@@ -151,7 +151,7 @@ export default function Home() {
                         <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full border-2 border-white/10 p-2">
                             <div className="w-full h-full rounded-full overflow-hidden bg-white/5 relative">
                                 <img 
-                                    src="https://github.com/alisaadkhan/Portolio/blob/main/assets/profile.jpg?raw=true" 
+                                    src="/profile.png" 
                                     alt="Ali Saad Khan - Full Stack Engineer" 
                                     className="w-full h-full object-cover" 
                                 />

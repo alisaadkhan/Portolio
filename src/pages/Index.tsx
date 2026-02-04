@@ -863,7 +863,7 @@ export default function Index() {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
                     <img
-                      src="https://github.com/alisaadkhan/Portolio/blob/main/assets/profile.jpg?raw=true"
+                      src="/profile.png"
                       alt="Ali Saad Khan - Full Stack Engineer"
                       loading="eager"
                       width="256"
@@ -1282,26 +1282,10 @@ export default function Index() {
               >
                 <div className="space-y-4 sm:space-y-6 text-sm sm:text-base md:text-lg text-[#94A3B8] leading-relaxed">
                   <p>
-                    Web designer and expert in{' '}
-                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
-                      UX/UI Design
-                    </span>{' '}
-                    with over{' '}
-                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
-                      4+ years
-                    </span>{' '}
-                    of industry experience. Expertise extends to{' '}
-                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
-                      Full-Stack Development
-                    </span>{' '}
-                    enabling me to create both aesthetically pleasing and easily implementable solutions.
-                  </p>
-                  <p>
-                    Currently works as{' '}
-                    <span className="inline-block px-3 py-1 bg-slate-800/80 border border-white/10 rounded-full text-white font-medium">
-                      Lead Full Stack Developer
-                    </span>{' '}
-                    at Freelance, building scalable web applications and secure API architectures.
+                    <strong className="text-white">Full-Stack Engineer</strong> specialized in architecting secure, high-performance web platforms. I leverage{' '}
+                    <strong className="text-white">Python</strong> and{' '}
+                    <strong className="text-white">PHP</strong> to build scalable{' '}
+                    <strong className="text-white">API architectures</strong> and robust backend systems. My focus is on writing clean, efficient code that prioritizes data security and system reliability over superficial features.
                   </p>
                 </div>
               </motion.div>
