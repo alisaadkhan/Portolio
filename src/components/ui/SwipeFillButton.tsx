@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { useRef } from "react";
 import { Link } from "react-router-dom";
 
 interface SwipeFillButtonProps {
@@ -16,13 +14,14 @@ interface SwipeFillButtonProps {
 }
 
 /**
- * Premium "Swipe Fill" Button with Masked Slide Animation
+ * Digital Swipe Button - Cyber-Minimalist Design
  * 
  * Features:
- * - Smooth color fill transition from left/bottom
- * - Text color switches dynamically as fill progresses
- * - Spring-based physics for snappy feel
- * - Magnetic hover effect
+ * - Transparent base with neon border (Violet/Cyan)
+ * - Diagonal swipe fill animation on hover
+ * - Dynamic text color switch (White → Black)
+ * - Glow shadow effect
+ * - Monospace font with letter-spacing
  */
 export default function SwipeFillButton({
   children,
@@ -36,13 +35,43 @@ export default function SwipeFillButton({
   type = "button",
   disabled = false
 }: SwipeFillButtonProps) {
-  const buttonRef = useRef<HTMLAnchorElement | HTMLButtonElement>(null);
+  // Variant-specific styles
+  const variantClasses = variant === "primary" 
+    ? "border-[#8b5cf6] hover:shadow-[0_0_20px_rgba(139,92,246,0.5)]" 
+    : "border-[#06b6d4] hover:shadow-[0_0_20px_rgba(6,182,212,0.5)]";
+  
+  const fillColor = variant === "primary" 
+    ? "bg-[#8b5cf6]" 
+    : "bg-[#06b6d4]";
 
-  const baseClasses = "group relative overflow-hidden rounded-full border border-white bg-transparent px-8 py-3 text-white transition-all duration-300 hover:text-black font-bold flex items-center justify-center gap-2";
+  const baseClasses = `
+    group relative overflow-hidden
+    rounded-lg border backdrop-blur-sm
+    bg-transparent px-8 py-3
+    text-white font-sans font-semibold
+    tracking-wider
+    transition-all duration-300 ease-in-out
+    flex items-center justify-center gap-2
+    hover:text-black
+    ${variantClasses}
+  `.trim().replace(/\s+/g, ' ');
 
   const content = (
     <>
-      <span className="absolute inset-0 -z-10 w-0 bg-white transition-all duration-300 ease-out group-hover:w-full"></span>
+      {/* Diagonal swipe fill effect */}
+      <span 
+        className={`
+          absolute inset-0 ${fillColor}
+          transform -translate-x-full 
+          transition-transform duration-300 ease-in-out
+          group-hover:translate-x-0
+          skew-x-[-12deg] scale-x-150
+          origin-left
+        `.trim().replace(/\s+/g, ' ')}
+        style={{ zIndex: 0 }}
+      ></span>
+      
+      {/* Button content */}
       <span className="relative z-10 flex items-center justify-center gap-2">
         {children}
       </span>
